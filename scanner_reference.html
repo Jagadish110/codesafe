@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&amp;family=Noto+Serif:wght@700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec5b13",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#0a0a0a",
+                        "neutral-dark": "#1a1a1a",
+                        "border-dark": "#262626"
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"],
+                        "serif": ["Noto Serif", "serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<title>Security Scanner - Dark Theme</title>
+</head>
+<body class="bg-background-dark text-slate-100 font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center py-5 px-4 md:px-20 lg:px-40">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<!-- Header Section -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-dark px-4 py-6">
+<div class="flex items-center gap-4">
+<div class="text-primary">
+<span class="material-symbols-outlined text-4xl">shield_with_heart</span>
+</div>
+<h2 class="text-slate-100 text-2xl font-serif font-bold tracking-tight">Security Scanner</h2>
+</div>
+<button class="flex items-center justify-center rounded-xl h-10 w-10 bg-neutral-dark border border-border-dark hover:bg-neutral-800 transition-colors">
+<span class="material-symbols-outlined text-slate-100">arrow_back</span>
+</button>
+</header>
+<!-- Content Section -->
+<main class="flex flex-col gap-8 py-8 px-4">
+<!-- Title -->
+<div class="space-y-2">
+<h1 class="text-slate-100 text-4xl font-serif font-bold leading-tight">Security Scanner</h1>
+<p class="text-slate-400 text-sm">Analyze your infrastructure and code for vulnerabilities.</p>
+</div>
+<!-- Product Type Selection -->
+<div class="space-y-4">
+<h2 class="text-slate-100 text-lg font-semibold tracking-tight">What kind of product is this?</h2>
+<div class="flex gap-3 flex-wrap">
+<button class="flex h-10 items-center justify-center gap-x-2 rounded-xl bg-primary text-white px-6 font-medium transition-transform active:scale-95">
+                                    Web App
+                                </button>
+<button class="flex h-10 items-center justify-center gap-x-2 rounded-xl bg-neutral-dark border border-border-dark text-slate-300 px-6 font-medium hover:border-primary/50">
+                                    Mobile App
+                                </button>
+<button class="flex h-10 items-center justify-center gap-x-2 rounded-xl bg-neutral-dark border border-border-dark text-slate-300 px-6 font-medium hover:border-primary/50">
+                                    API
+                                </button>
+<button class="flex h-10 items-center justify-center gap-x-2 rounded-xl bg-neutral-dark border border-border-dark text-slate-300 px-6 font-medium hover:border-primary/50">
+                                    Cloud Infrastructure
+                                </button>
+</div>
+</div>
+<!-- Tabs -->
+<div class="border-b border-border-dark">
+<div class="flex gap-8">
+<button class="flex flex-col items-center justify-center border-b-2 border-primary text-slate-100 pb-3 font-bold tracking-wide">
+                                    Drop Folder
+                                </button>
+<button class="flex flex-col items-center justify-center border-b-2 border-transparent text-slate-500 pb-3 font-bold tracking-wide hover:text-slate-300">
+                                    GitHub URL
+                                </button>
+</div>
+</div>
+<!-- Upload Area -->
+<div class="group relative flex flex-col items-center justify-center min-h-[320px] rounded-xl border-2 border-dashed border-border-dark bg-neutral-dark/30 p-12 text-center hover:border-primary/40 hover:bg-neutral-dark/50 transition-all cursor-pointer">
+<div class="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-4xl">cloud_upload</span>
+</div>
+<div class="space-y-2">
+<h3 class="text-xl font-bold text-slate-100">Click to upload or drag and drop</h3>
+<p class="text-slate-400 max-w-sm mx-auto">Upload your source code folder or infrastructure configuration files (ZIP, TAR, or individual files up to 50MB)</p>
+</div>
+<!-- Primary CTA inside upload or below -->
+<div class="mt-8">
+<button class="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-bold text-base shadow-lg shadow-primary/20 transition-all active:scale-95">
+                                    Select Folder
+                                </button>
+</div>
+</div>
+<!-- Footer Info -->
+<div class="flex items-center gap-2 text-slate-500 text-sm py-4">
+<span class="material-symbols-outlined text-base">lock</span>
+<p>Files are encrypted and deleted automatically after 24 hours.</p>
+</div>
+</main>
+</div>
+</div>
+</div>
+</div>
+</body></html>

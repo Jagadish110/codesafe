@@ -1,0 +1,910 @@
+/* ═══════════════════════════════════════════════
+   NEW TWO-SCREEN APP DESIGN
+   Screen 1: Input / Upload (dark, full-screen)
+   Screen 2: Dashboard (sidebar + main, light)
+═══════════════════════════════════════════════ */
+
+/* ── appView host ──────────────────────── */
+#appView {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    display: none;
+}
+
+#appView.active {
+    display: block;
+}
+
+/* ── SCREEN TRANSITIONS ────────────────── */
+.input-screen,
+.dash-screen {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    transition: opacity .5s ease, transform .5s cubic-bezier(.4, 0, .2, 1);
+}
+
+/* Input screen: light, fixed, centered */
+.input-screen {
+    background: #fcf7f0; /* Premium off-white/cream */
+    opacity: 1;
+    transform: translateY(0);
+    z-index: 2;
+    overflow: hidden; /* Fix scroll */
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-screen.slide-out {
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}
+
+/* Dash screen: starts invisible, slides up */
+.dash-screen {
+    background: var(--bg);
+    opacity: 0;
+    transform: translateY(60px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.dash-screen.slide-in {
+    opacity: 1;
+    transform: none !important;
+    pointer-events: auto;
+    will-change: auto !important;
+}
+
+
+/* ── INPUT SCREEN INNER — Wide 2-Column Layout ─── */
+#security-root .input-screen-inner {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 100px !important;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 80px;
+    align-items: center; /* Center vertically */
+    height: auto;
+    position: relative;
+    top: -20px; /* Slight adjustment for visual balance */
+}
+
+/* ── Left Column wrapper ── */
+.inp-col-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 16px 0;
+}
+
+.inp-col-left .inp-title {
+    text-align: left;
+    margin-bottom: 20px;
+    color: #0d0d0d;
+    font-size: 64px;
+    line-height: 1.1;
+    font-weight: 800;
+}
+
+.inp-col-left .inp-sub {
+    text-align: left;
+    margin: 0 0 40px 0;
+    max-width: 480px;
+    color: #6d6d6d;
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+.inp-col-left .inp-section-label {
+    text-align: left;
+    margin-bottom: 12px;
+    color: #0d0d0d;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+.inp-col-left .inp-biz-row {
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+
+
+
+.inp-col-right {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 0;
+}
+
+/* Tab pills */
+.inp-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    justify-content: center;
+}
+
+.inp-tab {
+    padding: 10px 24px;
+    border-radius: 99px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.inp-tab.active {
+    background: #fff;
+    border-color: #f1f5f9;
+    color: #f97316;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* Upload zone: light mode */
+.inp-col-right .inp-upload-zone {
+    background: #fff !important;
+    border: 1.5px dashed #e2e8f0 !important;
+    border-radius: 20px !important;
+    padding: 60px 40px !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.inp-col-right .inp-upload-zone:hover,
+.inp-col-right .inp-upload-zone.drag {
+    background: #fff !important;
+    border-color: #cbd5e1 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.04) !important;
+}
+
+.inp-upload-zone .inp-drop-title {
+    color: #0f172a;
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 16px;
+}
+
+.inp-upload-zone .inp-drop-sub {
+    color: #64748b;
+    font-size: 15px;
+    margin-top: 8px;
+}
+
+/* ── File info card in right column (shown after upload) ── */
+.inp-col-right .file-row {
+    display: none;
+}
+
+.inp-col-right .file-row.show {
+    background: rgba(22, 163, 74, 0.08) !important;
+    
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(22, 163, 74, 0.4) !important;
+    border-radius: 24px !important;
+    padding: 36px 32px !important;
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 12px 40px rgba(22, 163, 74, 0.1) !important;
+    transition: all 0.25s ease;
+}
+
+.inp-col-right .file-row .file-thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--red) !important;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff !important;
+}
+
+.inp-col-right .file-row .file-thumb svg {
+    width: 26px;
+    height: 26px;
+}
+
+.inp-col-right .file-row .file-meta {
+    flex: 1;
+}
+
+.inp-col-right .file-row .file-name {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: var(--text) !important;
+    margin-bottom: 2px !important;
+}
+
+.inp-col-right .file-row .file-count {
+    font-size: 14px !important;
+    color: var(--muted) !important;
+    opacity: 0.9;
+}
+
+.inp-col-right .file-row .rm-btn {
+    margin-left: auto;
+    background: rgba(255, 255, 255, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50% !important;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text) !important;
+    font-size: 14px;
+}
+
+.inp-col-right .file-row .rm-btn:hover {
+    background: rgba(220, 38, 38, 0.15) !important;
+    border-color: rgba(220, 38, 38, 0.4) !important;
+    color: #dc2626 !important;
+}
+
+/* Stack bar in right column */
+.inp-col-right .stack-bar {
+    display: none;
+}
+
+.inp-col-right .stack-bar.show {
+    background: rgba(255, 255, 255, 0.15) !important;
+    
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 16px !important;
+    padding: 16px 20px !important;
+    display: flex !important;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Error box in right column */
+.inp-col-right .err-box {
+    border-radius: 12px;
+}
+
+#security-root .input-screen-inner .inp-foot {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 12px;
+}
+
+/* ── Responsive — Stack on small screens ── */
+@media (max-width: 900px) {
+    #security-root .input-screen-inner {
+        grid-template-columns: 1fr;
+        padding: 24px 20px 32px !important;
+        gap: 16px;
+        text-align: center;
+    }
+
+    .inp-col-left {
+        align-items: center;
+        text-align: center;
+    }
+
+    .inp-col-left .inp-title,
+    .inp-col-left .inp-sub,
+    .inp-col-left .inp-section-label {
+        text-align: center;
+    }
+
+    .inp-col-left .inp-biz-row {
+        justify-content: center;
+    }
+
+    .inp-col-left .inp-scan-btn {
+        max-width: 100%;
+    }
+}
+
+/* Top bar — used in input screen now */
+#security-root .scanner-nav {
+    background: rgba(255, 255, 255, 0.1) !important;
+    
+    position: sticky !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 72px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35) !important;
+    z-index: 1000 !important;
+    padding: 0 48px !important;
+}
+
+/* ── Back button bar — always visible at top of scan screen ── */
+#security-root .nav-back-btn {
+    padding: 9px 22px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: rgba(255, 255, 255, 0.85) !important;
+    
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-radius: 50px !important;
+    color: #1a1208 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    pointer-events: auto !important;
+}
+
+#security-root .nav-back-btn:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10) !important;
+    background: #fff !important;
+}
+
+/* Ensure the sticky top bar containing back button is always on top */
+#security-root #inputScreen>div:first-child {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    pointer-events: none !important;
+    padding: 20px 32px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+}
+
+#security-root .input-screen-inner {
+    padding-top: 0 !important;
+    min-height: auto !important;
+}
+
+/* Redundant removal */
+.inp-topbar { display: none !important; }
+
+/* Business type row */
+.inp-biz-row {
+    display: flex;
+    flex-wrap: wrap !important;
+    justify-content: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+    width: 100%;
+}
+
+.inp-biz-btn {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    gap: 10px;
+    padding: 12px 24px;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 99px;
+    color: #64748b;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+
+.inp-biz-btn:hover {
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+.inp-biz-btn.active {
+    background: #fff;
+    border: 2px solid #f97316;
+    color: #f97316;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+}
+
+/* Hide legacy elements */
+.inp-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -.5px;
+}
+
+.inp-logo .logo-pip {
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: pip 2s ease infinite;
+}
+
+.inp-back-btn {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+    padding: 10px 20px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.inp-back-btn:hover {
+    background: #f8fafc;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+/* Title & Sub (Light Theme) */
+.inp-title {
+    font-family: 'Fraunces', serif;
+    font-size: 64px;
+    font-weight: 800;
+    color: #0d0d0d;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 24px;
+}
+
+.inp-sub {
+    font-size: 20px;
+    color: #6d6d6d;
+    max-width: 480px;
+    margin: 0 0 40px;
+    line-height: 1.5;
+}
+
+/* Section label (Light Theme) */
+.inp-section-label {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: #0d0d0d;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+/* Business type row */
+.inp-biz-row {
+    display: flex;
+    flex-wrap: wrap !important;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.inp-biz-btn {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    /* Prevent text wrap */
+    gap: 7px;
+    padding: 8px 14px;
+    /* Reduced to fit in line */
+    background: rgba(255, 255, 255, .07);
+    border: 1.5px solid rgba(255, 255, 255, .12);
+    border-radius: 50px;
+    color: rgba(255, 255, 255, .65);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    /* Slightly smaller */
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.inp-biz-btn:hover {
+    background: rgba(255, 255, 255, .13);
+    color: #fff;
+}
+
+.inp-biz-btn.active {
+    background: rgba(232, 50, 31, .15);
+    border-color: var(--red);
+    color: #fff;
+}
+
+/* Input tabs */
+.inp-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: rgba(255, 255, 255, .06);
+    border: 1.5px solid rgba(255, 255, 255, .1);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 14px;
+}
+
+.inp-tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 12px;
+    border: none;
+    background: none;
+    color: rgba(255, 255, 255, .45);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.inp-tab.active {
+    background: rgba(255, 255, 255, .1);
+    color: #fff;
+}
+
+/* GitHub input in dark context */
+/* GitHub inputs light mode */
+.input-screen .github-wrap {
+    margin-bottom: 20px;
+}
+
+.input-screen .github-input {
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    color: #0f172a;
+    border-radius: 12px;
+    padding: 12px 16px;
+}
+
+.input-screen .github-input::placeholder {
+    color: #94a3b8;
+}
+
+.input-screen .github-input:focus {
+    border-color: #f97316;
+    background: #fff;
+}
+
+.input-screen .github-btn {
+    background: #0f172a;
+    border: none;
+    color: #fff;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 600;
+}
+
+.input-screen .github-btn:hover {
+    background: rgba(255, 255, 255, .18);
+    color: #fff;
+}
+
+/* Upload zone */
+.inp-upload-zone {
+    border: 1.5px dashed rgba(255, 255, 255, .2);
+    border-radius: 16px;
+    padding: 56px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .25s;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 14px;
+    background: rgba(255, 255, 255, .03);
+}
+
+.inp-upload-zone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(232, 50, 31, .06) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.inp-upload-zone:hover,
+.inp-upload-zone.drag {
+    border-color: var(--red);
+    background: rgba(232, 50, 31, .05);
+}
+
+.inp-upload-zone input[type=file] {
+    display: none;
+}
+
+.inp-upload-ico {
+    width: 64px;
+    height: 64px;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    color: rgba(255, 255, 255, .6);
+    transition: all .2s;
+}
+
+.inp-upload-zone:hover .inp-upload-ico {
+    border-color: var(--red);
+    color: var(--red);
+    transform: scale(1.08) rotate(-4deg);
+}
+
+.inp-upload-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+}
+
+.inp-upload-hint {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: rgba(255, 255, 255, .35);
+    margin-bottom: 20px;
+}
+
+.inp-chip-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.inp-chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid rgba(255, 255, 255, .1);
+    color: rgba(255, 255, 255, .5);
+}
+
+/* Stack bar in dark context */
+.input-screen .stack-bar {
+    background: rgba(255, 255, 255, .06);
+    border-color: rgba(255, 255, 255, .12);
+    color: rgba(255, 255, 255, .7);
+}
+
+/* File row in dark context */
+.input-screen .file-row {
+    background: rgba(255, 255, 255, .06);
+    border-color: rgba(255, 255, 255, .12);
+}
+
+.input-screen .file-name,
+.input-screen .file-count {
+    color: rgba(255, 255, 255, .7);
+}
+
+.input-screen .rm-btn {
+    background: rgba(255, 255, 255, .08);
+    border-color: rgba(255, 255, 255, .15);
+    color: rgba(255, 255, 255, .6);
+}
+
+/* Foot section for centered scan button */
+#security-root .input-screen-inner .inp-foot {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+}
+
+.inp-scan-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 440px;
+    padding: 24px 32px;
+    background: #fff7ed; /* Light brand orange bg */
+    border: 1.5px solid #ffedd5;
+    border-radius: 99px;
+    color: #f97316; /* Brand orange text */
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 800;
+    cursor: pointer;
+    letter-spacing: -.5px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    
+    /* Completely invisible by default - no animation */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.inp-scan-btn.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.inp-scan-btn:not(:disabled) {
+    background: #f97316;
+    border-color: #f97316;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 24px rgba(249, 115, 22, .35);
+}
+
+.inp-scan-btn:not(:disabled):hover {
+    background: #ea580c;
+    box-shadow: 0 8px 36px rgba(234, 88, 12, 0.4);
+}
+
+.inp-foot {
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: rgba(255, 255, 255, .2);
+    margin-top: 28px;
+    letter-spacing: .5px;
+}
+
+/* ── DASH SCREEN ────────────────────────── */
+.dash-screen .dash-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.dash-screen .dash-sidebar {
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 16px 16px;
+}
+
+.dash-sidebar-top {
+    flex: 1;
+}
+
+.dash-screen .dash-main {
+    height: 100vh;
+    overflow-y: auto;
+    padding: 24px;
+    background: var(--bg);
+}
+
+/* Mini upload zone in sidebar */
+.dash-upload-zone-mini {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 12px 14px;
+    background: none;
+    border: 1.5px dashed var(--border2);
+    border-radius: 10px;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .2s;
+    margin-bottom: 8px;
+}
+
+.dash-upload-zone-mini:hover {
+    border-color: var(--red);
+    color: var(--text);
+    background: rgba(232, 50, 31, .04);
+}
+
+/* Card animations on dash entry */
+@keyframes dashCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dash-screen.slide-in .dash-card,
+.dash-screen.slide-in .vibe-panel,
+.dash-screen.slide-in .score-card {
+    animation: dashCardIn .45s ease both;
+}
+
+.dash-screen.slide-in .dash-sidebar {
+    animation: dashCardIn .35s ease both;
+}
+
+.dash-screen.slide-in .dash-grid-top> :nth-child(1) {
+    animation-delay: .1s;
+}
+
+.dash-screen.slide-in .dash-grid-top> :nth-child(2) {
+    animation-delay: .18s;
+}
+
+.dash-screen.slide-in .vibe-panel {
+    animation-delay: .26s;
+}
+
+.dash-screen.slide-in .score-card {
+    animation-delay: .32s;
+}
+
+.dash-screen.slide-in .dash-col-left .dash-card {
+    animation-delay: .36s;
+}
+
+.dash-screen.slide-in .dash-col-right .dash-card {
+    animation-delay: .42s;
+}
+
+/* ── RESPONSIVE ──────────────────────────── */
+@media (max-width: 700px) {
+    .inp-biz-row {
+        gap: 6px;
+    }
+
+    .inp-biz-btn {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+
+    .inp-title {
+        font-size: 28px;
+    }
+
+    .dash-screen .dash-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .dash-screen .dash-sidebar {
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .dash-screen .dash-main {
+        height: auto;
+        overflow: visible;
+    }
+}

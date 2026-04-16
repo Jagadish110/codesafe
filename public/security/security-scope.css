@@ -1,0 +1,785 @@
+/*
+ * security-scope.css — v3
+ * ═══════════════════════════════════════════════════════════
+ * Comprehensive styling patch for the security scanner inside Next.js.
+ * • Same cream background across ALL screens (landing / scan / dashboard)
+ * • Smooth pill-shaped button curves everywhere  
+ * • Animated tab switching (Drop Folder ↔ GitHub URL)
+ * • Fraunces serif "Ask about your report" button  
+ * • Consistent dashboard sidebar buttons
+ * ═══════════════════════════════════════════════════════════
+ */
+
+/* ═══════════════════════════════════════════════════
+   1. ROOT — Refined Premium Dark Base
+ ═══════════════════════════════════════════════════ */
+#security-root {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    overflow-x: hidden;
+    position: relative;
+    /* Prevent hardware acceleration causing layout shifts */
+}
+
+/* Subtle Film Grain Overlay */
+#security-root::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+}
+
+#security-root *,
+#security-root *::before,
+#security-root *::after {
+    box-sizing: border-box;
+}
+
+/* Force dark body background */
+body:has(#security-root) {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    font-family: var(--sans) !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   2. NAVIGATION & LAYOUT
+ ═══════════════════════════════════════════════════ */
+#security-root #appView {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    overflow: hidden;
+    background: var(--bg);
+}
+
+#security-root .nav {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    background: rgba(3, 3, 3, 0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Back button — Premium Dark Style */
+#security-root .inp-back-btn,
+#security-root .nav-back-btn {
+    background: var(--surface) !important;
+    border: 1px solid var(--border2) !important;
+    color: var(--text) !important;
+    border-radius: 50px !important;
+    font-family: var(--sans) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 10px 24px !important;
+    cursor: pointer !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+#security-root .inp-back-btn:hover,
+#security-root .nav-back-btn:hover {
+    background: var(--surface2) !important;
+    border-color: var(--border) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Title & subtitle */
+#security-root .inp-title {
+    color: var(--text) !important;
+    font-family: 'Fraunces', serif !important;
+    font-weight: 900 !important;
+}
+
+#security-root .inp-sub {
+    color: var(--muted) !important;
+}
+
+#security-root .inp-section-label {
+    color: var(--muted) !important;
+    font-family: var(--mono) !important;
+}
+
+/* ── Business type pills — smooth rounded curves ── */
+#security-root .inp-biz-btn {
+    background: var(--surface) !important;
+    border: 1.5px solid var(--border2) !important;
+    color: var(--muted2) !important;
+    border-radius: 50px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    transition: all .18s !important;
+}
+
+#security-root .inp-biz-btn:hover {
+    background: var(--surface2) !important;
+    color: var(--text) !important;
+    border-color: var(--border2) !important;
+    transform: translateY(-1px);
+}
+
+#security-root .inp-biz-btn.active {
+    background: var(--orange-dim) !important;
+    border-color: var(--orange) !important;
+    color: var(--orange) !important;
+    box-shadow: 0 0 0 3px rgba(255, 122, 0, 0.15);
+}
+
+/* ── Tab switcher — full width segmented toggle, NO page shift ── */
+#security-root .inp-tabs {
+    background: var(--surface2) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 50px !important;
+    padding: 6px !important;
+    margin-bottom: 24px !important;
+    display: flex !important;
+    gap: 8px !important;
+    width: fit-content !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+#security-root .inp-tab {
+    color: var(--muted) !important;
+    border-radius: 50px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    /* Simple ease — NO spring overshoot that causes layout shift */
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease !important;
+    /* Lock the height so it never resizes during animation */
+    height: 44px !important;
+    padding: 0 24px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    border: none !important;
+    background: none !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    white-space: nowrap !important;
+}
+
+#security-root .inp-tab.active {
+    background: var(--surface2) !important;
+    color: var(--orange) !important;
+    border: none !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+#security-root .inp-tab:hover:not(.active) {
+    color: var(--text) !important;
+}
+
+/* ── Tab content smooth fade animation (CSS-only, no layout shift) ── */
+@keyframes sec-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* GitHub input area — fade in on show
+   Use opacity animation only — NO height/width changes that cause reflow */
+#security-root .github-wrap {
+    animation-duration: .22s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: both;
+}
+
+#security-root .github-wrap.show {
+    animation-name: sec-fade-in;
+}
+
+/* Upload zone — simple opacity when reappearing */
+#security-root #uploadZone {
+    transition: opacity .18s ease;
+}
+
+/* ── GitHub inputs — light style ── */
+/* Reclaim space completely when file is uploaded/fetched */
+#security-root:has(#fileRow.show) .inp-tabs,
+#security-root:has(#fileRow.show) .inp-tab-content-area {
+    display: none !important;
+}
+
+#security-root .github-input {
+    background: var(--surface) !important;
+    border: 1.5px solid var(--border2) !important;
+    color: var(--text) !important;
+    border-radius: 12px !important;
+    font-family: 'DM Sans', sans-serif !important;
+}
+
+#security-root .github-input::placeholder {
+    color: var(--muted) !important;
+}
+
+#security-root .github-input:focus {
+    border-color: var(--scanner-accent) !important;
+    outline: none;
+}
+
+#security-root .github-btn {
+    background: var(--surface2) !important;
+    border: 1.5px solid var(--border2) !important;
+    color: var(--muted2) !important;
+    border-radius: 12px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    transition: all .18s !important;
+}
+
+#security-root .github-btn:hover {
+    background: var(--scanner-accent-dim) !important;
+    border-color: var(--scanner-accent) !important;
+    color: var(--scanner-accent) !important;
+}
+
+/* ── Upload zone — light style ── */
+#security-root .inp-upload-zone {
+    border: 1.5px dashed var(--border2) !important;
+    background: var(--surface) !important;
+    border-radius: 16px !important;
+}
+
+#security-root .inp-upload-zone:hover,
+#security-root .inp-upload-zone.drag {
+    border-color: var(--scanner-accent) !important;
+    background: var(--scanner-accent-dim) !important;
+}
+
+/* Upload icon box */
+#security-root .inp-upload-ico {
+    background: var(--surface2) !important;
+    border: 1px solid var(--border2) !important;
+    color: var(--muted2) !important;
+    border-radius: 12px !important;
+}
+
+#security-root .inp-upload-zone:hover .inp-upload-ico {
+    border-color: var(--scanner-accent) !important;
+    color: var(--scanner-accent) !important;
+}
+
+/* Upload text */
+#security-root .inp-upload-title {
+    color: var(--text) !important;
+    font-family: 'Fraunces', serif !important;
+}
+
+#security-root .inp-upload-hint {
+    color: var(--muted) !important;
+    font-family: var(--mono) !important;
+}
+
+/* Chips */
+#security-root .inp-chip {
+    background: var(--surface2) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--muted) !important;
+    font-family: var(--mono) !important;
+    border-radius: 50px !important;
+}
+
+/* Stack bar */
+#security-root .stack-bar {
+    background: var(--surface) !important;
+    border-color: var(--border2) !important;
+    color: var(--text) !important;
+    border-radius: 12px !important;
+}
+
+/* File row */
+#security-root .file-row {
+    background: var(--surface) !important;
+    border-color: var(--border) !important;
+    border-radius: 12px !important;
+}
+
+#security-root .file-name {
+    color: var(--text) !important;
+}
+
+#security-root .file-count {
+    color: var(--muted) !important;
+    font-family: var(--mono) !important;
+}
+
+/* ── SCAN BUTTON — prominent pill ── */
+#security-root .inp-scan-btn {
+    background: rgba(232, 50, 31, .05) !important;
+    border: 1.5px solid var(--border2) !important;
+    border-radius: 56px !important;
+    /* BIG pill curve */
+    color: var(--muted) !important;
+    font-family: 'Fraunces', serif !important;
+    font-weight: 900 !important;
+    cursor: not-allowed;
+    transition: all .25s !important;
+}
+
+#security-root .inp-scan-btn:not(:disabled) {
+    background: var(--red) !important;
+    border-color: var(--red) !important;
+    color: #fff !important;
+    cursor: pointer;
+    box-shadow: 0 4px 24px var(--red-shadow) !important;
+}
+
+#security-root .inp-scan-btn:not(:disabled):hover {
+    background: var(--red-hover) !important;
+    box-shadow: 0 8px 36px var(--red-shadow) !important;
+    transform: translateY(-2px);
+}
+
+/* Footer text */
+#security-root .inp-foot {
+    color: var(--muted) !important;
+    font-family: var(--mono) !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   4. DASHBOARD SCREEN
+ ═══════════════════════════════════════════════════ */
+#security-root .dash-screen {
+    background: var(--bg) !important;
+}
+
+#security-root .dash-layout {
+    display: grid;
+    /* Increased sidebar width from 260px to 285px to perfectly fit bottom buttons */
+    grid-template-columns: 285px 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* ── Sidebar ── */
+#security-root .dash-sidebar {
+    background: var(--surface) !important;
+    border-right: none !important;
+    /* Removed vertical straight line */
+    padding: 24px 16px;
+    color: var(--text) !important;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+#security-root .logo-stack {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+}
+
+#security-root .dash-sidebar .nav-logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    color: var(--text) !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* ── Sidebar Back button — pill ── */
+#security-root .back-btn {
+    background: var(--surface2) !important;
+    border: 1px solid var(--border2) !important;
+    color: var(--muted2) !important;
+    font-family: 'DM Sans', sans-serif !important;
+    padding: 6px 16px !important;
+    border-radius: 50px !important;
+    /* pill */
+    font-size: 13px !important;
+    cursor: pointer;
+    transition: all .18s !important;
+}
+
+#security-root .back-btn:hover {
+    background: var(--surface3) !important;
+    border-color: var(--border2) !important;
+    color: var(--text) !important;
+}
+
+/* Biz heading label */
+#security-root .biz-heading {
+    font-family: var(--mono) !important;
+    font-size: 10px !important;
+    letter-spacing: 1.5px !important;
+    color: var(--muted) !important;
+    text-transform: uppercase !important;
+    margin-bottom: 8px !important;
+    opacity: 0.7;
+}
+
+/* Make biz row stack vertically */
+#security-root .biz-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: flex-start !important;
+}
+
+/* Biz buttons — full width pill */
+#security-root .biz-btn {
+    width: 200px !important;
+    /* Fixed width so they are uniform but not oversized */
+    justify-content: flex-start !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    border-radius: 50px !important;
+    padding: 8px 14px !important;
+    border: 1.5px solid var(--border) !important;
+    background: transparent !important;
+    color: var(--muted2) !important;
+    cursor: pointer;
+    transition: all .18s !important;
+}
+
+#security-root .biz-btn:hover {
+    background: var(--surface2) !important;
+    border-color: var(--border2) !important;
+    color: var(--text) !important;
+}
+
+#security-root .biz-btn.active {
+    background: var(--scanner-accent-dim) !important;
+    border-color: var(--scanner-accent) !important;
+    color: var(--scanner-accent) !important;
+    font-weight: 600 !important;
+}
+
+/* ── Reset (Scan a different project) — pill ── */
+#security-root .reset-btn {
+    width: 100%;
+    max-width: 100% !important;
+    background: var(--surface2) !important;
+    border: 1.5px solid var(--border2) !important;
+    color: var(--muted2) !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 10px 14px !important;
+    border-radius: 50px !important;
+    /* pill */
+    cursor: pointer;
+    transition: all .2s !important;
+    text-align: center;
+}
+
+#security-root .reset-btn:hover {
+    background: var(--surface3) !important;
+    border-color: var(--scanner-accent) !important;
+    color: var(--scanner-accent) !important;
+}
+
+/* ══════════════════════════════════════════════════
+   ★  ASK ABOUT YOUR REPORT — Fraunces serif style
+      Inspired by "CodeSafe" brand text (Pic 3)
+ ══════════════════════════════════════════════════ */
+#security-root #askReportBtn,
+#security-root .ask-btn-serif-mod {
+    width: 100% !important;
+    max-width: 100% !important;
+    background: var(--red) !important;
+    /* Changed from dark brown/black to theme red */
+    border: none !important;
+    color: #fff !important;
+    font-family: 'Fraunces', serif !important;
+    font-size: 14.5px !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.3px !important;
+    padding: 11px 14px !important;
+    border-radius: 50px !important;
+    cursor: pointer;
+    transition: background .2s ease, box-shadow .2s ease, transform .2s ease !important;
+    box-shadow: 0 4px 15px var(--red-shadow) !important;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: normal !important;
+}
+
+#security-root #askReportBtn:hover,
+#security-root .ask-btn-serif-mod:hover {
+    background: var(--red-hover) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px var(--red-shadow) !important;
+}
+
+/* Sidebar footer */
+#security-root .sidebar-foot {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+}
+
+/* ── Main content ── */
+#security-root .dash-main {
+    background: var(--bg) !important;
+    color: var(--text) !important;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+/* Dashboard cards */
+#security-root .dash-card {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    border-radius: 12px !important;
+}
+
+/* Loading section */
+#security-root #loadSec {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+    color: var(--text) !important;
+}
+
+#security-root .load-title {
+    color: var(--text) !important;
+    font-family: 'Fraunces', serif !important;
+}
+
+#security-root .load-sub {
+    color: var(--muted) !important;
+}
+
+/* ── Action bar buttons (Download, Share, Re-scan) — pill ── */
+#security-root .act-btn {
+    background: var(--surface) !important;
+    border: 1.5px solid var(--border2) !important;
+    color: var(--text) !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px !important;
+    border-radius: 50px !important;
+    /* pill */
+    padding: 7px 18px !important;
+    transition: all .18s !important;
+}
+
+#security-root .act-btn:hover {
+    background: var(--surface2) !important;
+    border-color: var(--border2) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .08) !important;
+}
+
+#security-root .act-btn.primary {
+    background: var(--red) !important;
+    border-color: var(--red) !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 3px 14px var(--red-shadow) !important;
+}
+
+#security-root .act-btn.primary:hover {
+    background: var(--red-hover) !important;
+    box-shadow: 0 6px 20px var(--red-shadow) !important;
+}
+
+/* Filter buttons */
+#security-root .filter-btn {
+    background: none !important;
+    border-color: var(--border) !important;
+    color: var(--muted2) !important;
+    font-family: var(--mono) !important;
+    border-radius: 50px !important;
+}
+
+#security-root .filter-btn:hover {
+    border-color: var(--border2) !important;
+    color: var(--text) !important;
+}
+
+/* Vuln cards */
+#security-root .vuln-card {
+    background: var(--surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text) !important;
+    border-radius: 12px !important;
+}
+
+#security-root .vuln-top {
+    background: var(--surface) !important;
+    color: var(--text) !important;
+}
+
+#security-root .vuln-body {
+    background: var(--surface2) !important;
+    color: var(--text) !important;
+}
+
+/* Cream Code Blocks */
+#security-root .code-block {
+    background: var(--bg) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+}
+
+#security-root .code-hdr {
+    background: var(--surface2) !important;
+    border-bottom: 1px solid var(--border) !important;
+    color: var(--muted) !important;
+}
+
+#security-root .code-pre,
+#security-root .code-block code {
+    background: transparent !important;
+    color: var(--text) !important;
+    font-family: var(--mono) !important;
+}
+
+/* Chat widget */
+#security-root .chat-widget {
+    background: var(--surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text) !important;
+    border-radius: 16px !important;
+}
+
+#security-root .chat-overlay {
+    background: none !important;
+}
+
+#security-root #chatInput {
+    background: var(--surface2) !important;
+    border-color: var(--border) !important;
+    color: var(--text) !important;
+    font-family: 'DM Sans', sans-serif !important;
+    border-radius: 12px !important;
+}
+
+#security-root .send-btn {
+    background: var(--red) !important;
+    color: #fff !important;
+    border-radius: 50% !important;
+}
+
+/* Toast */
+#security-root .toast {
+    border-radius: 50px !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   5. TYPOGRAPHY GLOBALS
+ ═══════════════════════════════════════════════════ */
+#security-root h1,
+#security-root h2,
+#security-root .inp-title,
+#security-root .load-title,
+#security-root .inp-upload-title,
+#security-root .v-head {
+    font-family: 'Fraunces', serif !important;
+}
+
+#security-root .inp-section-label,
+#security-root .inp-upload-hint,
+#security-root .inp-chip,
+#security-root .inp-foot,
+#security-root .stack-bar-lbl,
+#security-root .sec-lbl,
+#security-root .filter-lbl,
+#security-root .sidebar-foot,
+#security-root .biz-heading,
+#security-root code,
+#security-root pre {
+    font-family: var(--mono) !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   6. RESPONSIVE
+ ═══════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    #security-root .dash-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+    }
+
+    #security-root .dash-sidebar {
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    #security-root .dash-main {
+        height: auto;
+        overflow: visible;
+    }
+}
+
+/* ═══════════════════════════════════════════════════
+   7. TEXT SIZE INCREASES FOR VISIBILITY
+ ═══════════════════════════════════════════════════ */
+/* Vulnerability titles */
+#security-root .v-name {
+    font-size: 16px !important;
+}
+
+/* File name below title */
+#security-root .v-file {
+    font-size: 12.5px !important;
+}
+
+/* Section Labels: WHAT IS THIS?, WHY DANGEROUS?, etc. */
+#security-root .vg-lbl,
+#security-root .fix-hdr {
+    font-size: 10.5px !important;
+    letter-spacing: 1.8px !important;
+}
+
+/* Section text content under labels */
+#security-root .vg-txt,
+#security-root .fix-steps {
+    font-size: 14.5px !important;
+    line-height: 1.7 !important;
+}
+
+/* Code blocks */
+#security-root .code-pre {
+    font-size: 13.5px !important;
+}
+
+#security-root .code-lang {
+    font-size: 12px !important;
+}

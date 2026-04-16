@@ -1,0 +1,277 @@
+/* ═══════════════════════════════════════════════
+   CODE SAFE: REPORT DASHBOARD (PREMIUM ANALYTICS)
+   High-fidelity match to pic2
+═══════════════════════════════════════════════ */
+
+/* ── LAYOUT ───────────────────────────────── */
+.dash-screen {
+  background: #f5ede0;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.dash-layout {
+  display: block;
+  min-height: 100vh;
+}
+
+.side-back-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.side-back-btn:hover {
+  color: var(--text);
+}
+
+.nav-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.logo-pip {
+  width: 10px;
+  height: 10px;
+  background: var(--red);
+  border-radius: 50%;
+}
+
+/* ── MAIN CONTENT ─────────────────────────── */
+.dash-main {
+  flex: 1;
+  background: #f5ede0;
+  height: 100vh;
+  position: relative;
+}
+
+.dash-main-scroll {
+  padding: 32px 48px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Header */
+.dash-header {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.dash-header .act-btn {
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.dash-header .btn-primary {
+  background: var(--red);
+  color: #fff;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Top Split Grid */
+.dash-top-layout {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.verdict-premium-card {
+  background: #fdf6e7;
+  border: 1px solid #efe0c5;
+  border-radius: 20px;
+  padding: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.verdict-info .badge-stable {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.verdict-info h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 40px;
+  font-weight: 900;
+  color: #ca8a04;
+  /* Yellow/Gold caution color */
+  margin: 16px 0 8px 0;
+  line-height: 1.1;
+}
+
+.verdict-info p {
+  font-size: 14px;
+  color: var(--muted);
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.score-circle {
+  width: 120px;
+  height: 120px;
+  position: relative;
+}
+
+.score-n {
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.score-l {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* Metrics Panel */
+.checks-panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.stat-box {
+  background: #111;
+  color: #fff;
+  padding: 10px 4px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-box.sev-c {
+  background: #5a6678;
+}
+
+.stat-box.sev-h {
+  background: var(--red);
+}
+
+.stat-box.sev-m {
+  background: var(--orange);
+}
+
+.stat-box.sev-l {
+  background: var(--yellow);
+}
+
+.stat-n {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.stat-l {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.safety-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.vc-item {
+  background: #f9f9f9;
+  border: 1px solid #eee;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+}
+
+/* Vulnerabilities Detailed */
+.vulns-detailed-panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+}
+
+.vuln-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s;
+}
+
+.vuln-card:hover {
+  border-color: var(--border);
+  transform: translateX(4px);
+}
+
+.filter-btn {
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.filter-btn.active {
+  background: var(--text);
+  color: #fff;
+  border-color: var(--text);
+}

@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+html, body {
+  scroll-behavior: smooth !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  /* Removed transform to prevent fixed element jitter */
+  min-height: 100vh;
+}
+
+/* Complete Scrollbar Removal as requested */
+html, body, #security-root, * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Ensure layout is stable during rendering */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Smooth transitions for interactive elements */
+a, button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}

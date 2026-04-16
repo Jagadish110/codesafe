@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodeSafe - Dark Theme Redesign</title>
+<!-- Tailwind CSS v3 CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts for Typography -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'deep-charcoal': '#0A0A0B',
+            'vibrant-orange': '#FF4D20',
+            'glass-white': 'rgba(255, 255, 255, 0.05)',
+            'glass-border': 'rgba(255, 255, 255, 0.1)',
+          },
+          fontFamily: {
+            'serif': ['Playfair Display', 'serif'],
+            'sans': ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'glow-orange': '0 0 20px rgba(255, 77, 32, 0.4)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-typography">
+    .hero-title {
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+    }
+    .accent-text {
+      font-style: italic;
+    }
+  </style>
+<style data-purpose="background-effects">
+    body {
+      background-color: #0A0A0B;
+      color: #E2E8F0;
+    }
+    /* Subtle radial gradient for depth */
+    .bg-gradient-overlay {
+      background: radial-gradient(circle at 50% -20%, #1A1A1E 0%, #0A0A0B 70%);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-vibrant-orange selection:text-white">
+<!-- Background Overlay -->
+<div class="bg-gradient-overlay"></div>
+<!-- BEGIN: Navigation -->
+<header class="fixed top-0 w-full z-50 border-b border-white/5 bg-deep-charcoal/80 backdrop-blur-md">
+<nav class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<!-- Logo Section -->
+<div class="flex items-center gap-2">
+<div class="w-2.5 h-2.5 bg-vibrant-orange rounded-full"></div>
+<span class="text-xl font-bold tracking-tight text-white">CodeSafe</span>
+</div>
+<!-- Links Section -->
+<div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+<a class="hover:text-white transition-colors" href="#">Features</a>
+<a class="hover:text-white transition-colors" href="#">How it works</a>
+<a class="hover:text-white transition-colors" href="#">Pricing</a>
+<a class="hover:text-white transition-colors" href="#">FAQ</a>
+</div>
+<!-- CTA Section -->
+<div class="flex items-center gap-4">
+<button class="hidden sm:flex bg-vibrant-orange text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-orange-600 transition-all hover:shadow-glow-orange">
+          Scan My Code →
+        </button>
+<div class="w-10 h-10 rounded-full bg-vibrant-orange flex items-center justify-center text-white font-bold cursor-pointer border-2 border-white/10">
+          J
+        </div>
+</div>
+</nav>
+</header>
+<!-- END: Navigation -->
+<!-- BEGIN: Hero Section -->
+<main class="relative pt-32 pb-20 px-6">
+<div class="max-w-4xl mx-auto text-center mt-20">
+<!-- Status Badge -->
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-vibrant-orange/10 border border-vibrant-orange/20 text-vibrant-orange text-xs font-bold uppercase tracking-widest mb-10">
+<span class="w-1.5 h-1.5 bg-vibrant-orange rounded-full animate-pulse"></span>
+        Free to try — No sign up needed
+      </div>
+<!-- Main Headline -->
+<h1 class="hero-title font-serif text-7xl md:text-9xl font-black text-white mb-8">
+        Your code is <br/>
+<span class="text-vibrant-orange accent-text">live.</span> Is it safe?
+      </h1>
+<!-- Sub-headline -->
+<p class="text-xl md:text-2xl text-gray-400 leading-relaxed max-w-2xl mx-auto mb-12">
+        You built fast with AI tools. Now scan your entire codebase for security vulnerabilities — plain English report, no technical knowledge needed.
+      </p>
+<!-- Primary Actions -->
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<button class="w-full sm:w-auto px-10 py-5 bg-vibrant-orange text-white rounded-2xl text-lg font-bold hover:bg-orange-600 transition-all shadow-glow-orange active:scale-95">
+          Scan My Code Free
+        </button>
+<button class="w-full sm:w-auto px-10 py-5 bg-glass-white border border-glass-border text-white rounded-2xl text-lg font-semibold hover:bg-white/10 transition-all backdrop-blur-sm active:scale-95">
+          See how it works
+        </button>
+</div>
+</div>
+</main>
+<!-- END: Hero Section -->
+<!-- BEGIN: Partner Section -->
+<section class="max-w-7xl mx-auto px-6 pt-20 pb-12">
+<div class="flex flex-col items-center">
+<p class="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-500 mb-8">
+        Built for teams using
+      </p>
+<!-- Tech Stack Chips -->
+<div class="flex flex-wrap justify-center gap-3">
+<div class="px-5 py-2.5 rounded-lg bg-glass-white border border-glass-border text-gray-300 text-sm font-medium hover:border-vibrant-orange/50 transition-colors cursor-default">
+          Lovable
+        </div>
+<div class="px-5 py-2.5 rounded-lg bg-glass-white border border-glass-border text-gray-300 text-sm font-medium hover:border-vibrant-orange/50 transition-colors cursor-default">
+          Bolt
+        </div>
+<div class="px-5 py-2.5 rounded-lg bg-glass-white border border-glass-border text-gray-300 text-sm font-medium hover:border-vibrant-orange/50 transition-colors cursor-default">
+          Cursor
+        </div>
+<div class="px-5 py-2.5 rounded-lg bg-glass-white border border-glass-border text-gray-300 text-sm font-medium hover:border-vibrant-orange/50 transition-colors cursor-default">
+          v0
+        </div>
+<div class="px-5 py-2.5 rounded-lg bg-glass-white border border-glass-border text-gray-300 text-sm font-medium hover:border-vibrant-orange/50 transition-colors cursor-default">
+          Replit
+        </div>
+</div>
+</div>
+</section>
+<!-- END: Partner Section -->
+<!-- BEGIN: Footer Elements -->
+<div class="fixed bottom-6 left-6 z-50">
+<button class="w-12 h-12 bg-zinc-900 border border-white/10 rounded-xl flex items-center justify-center text-white hover:bg-zinc-800 transition-colors shadow-2xl">
+<span class="font-bold text-lg">N</span>
+</button>
+</div>
+<!-- END: Footer Elements -->
+</body></html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CodeSafe Premium Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FF5722",
+                        "background-light": "#F9FAFB",
+                        "card-light": "#FFFFFF",
+                        "border-light": "#E5E7EB",
+                        "text-primary": "#111827",
+                        "text-secondary": "#4B5563",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 87, 34, 0.1);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(255, 87, 34, 0.08), transparent);
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light text-text-primary min-h-screen">
+<div class="relative flex min-h-screen flex-col overflow-x-hidden">
+<!-- Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-border-light bg-white/80 backdrop-blur-md px-6 lg:px-12 py-4">
+<div class="max-w-[1440px] mx-auto flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="bg-primary p-1.5 rounded-lg shadow-sm">
+<span class="material-symbols-outlined text-white text-2xl">shield_lock</span>
+</div>
+<h2 class="text-xl font-black tracking-tight uppercase text-text-primary">CodeSafe</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm font-semibold text-primary" href="#">Dashboard</a>
+<a class="text-sm font-medium text-text-secondary hover:text-primary transition-colors" href="#">Projects</a>
+<a class="text-sm font-medium text-text-secondary hover:text-primary transition-colors" href="#">Scans</a>
+<a class="text-sm font-medium text-text-secondary hover:text-primary transition-colors" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl group-focus-within:text-primary transition-colors">search</span>
+<input class="bg-slate-100 border-none rounded-xl pl-10 pr-4 py-2 text-sm w-64 focus:ring-1 focus:ring-primary transition-all" placeholder="Search vulnerabilities..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-sm transition-all">
+<span class="material-symbols-outlined text-sm">refresh</span>
+<span>Re-scan</span>
+</button>
+<button class="bg-white border border-border-light hover:bg-slate-50 text-text-primary px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-soft transition-all">
+<span class="material-symbols-outlined text-sm">magic_button</span>
+<span>Fix For Me</span>
+</button>
+</div>
+<div class="size-10 rounded-full border border-primary/20 p-0.5">
+<div class="size-full rounded-full bg-cover bg-center" data-alt="User profile avatar circle" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCGp0GHqekgEKqKL01Cgwwg_8Ubu90xfgFPkRAlYCJlucv-jGiIT9G9mJmpcwFiuRRomUA37KxmkcPa0SA3gsfA0Skf5nx2rhT9BmxxfV4_DZSWgQDJQc0TUpuoRNLNRSUudVEAQ4WcGrLzplPKNdJFg9BzWIb7pJpF9h7PhooYGxUfreo8xknKhoBhR2DpQoGS0vJ-4AncNRj0EJtAKTf9P869Vm_daVh00iPjt6LecyasX8rZuJTmZl0svTRJJbsjD0Ub2RIv70YP')"></div>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1 w-full max-w-[1440px] mx-auto px-6 lg:px-12 py-8">
+<!-- Hero Section -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+<div class="lg:col-span-8 flex flex-col justify-center p-8 rounded-3xl glass-effect hero-gradient relative overflow-hidden shadow-soft border border-border-light">
+<div class="relative z-10">
+<div class="flex items-center gap-2 text-primary mb-4">
+<span class="material-symbols-outlined">account_tree</span>
+<span class="text-sm font-bold tracking-widest uppercase">Project: Web-App-Main-Branch</span>
+</div>
+<h1 class="text-4xl lg:text-5xl font-black mb-6 leading-tight text-text-primary">Your code is live.<br/><span class="text-primary">Is it safe?</span></h1>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 text-sm font-semibold text-text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">history</span> View History
+                            </button>
+<button class="flex items-center gap-2 text-sm font-semibold text-text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined">share</span> Share Report
+                            </button>
+</div>
+</div>
+<div class="absolute right-0 top-0 h-full w-1/3 opacity-[0.03] hidden lg:block pointer-events-none">
+<span class="material-symbols-outlined text-[240px] -rotate-12 text-primary">security</span>
+</div>
+</div>
+<div class="lg:col-span-4 bg-white rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-soft border border-border-light border-l-4 border-l-primary">
+<p class="text-sm font-bold text-text-secondary uppercase tracking-widest mb-6">Deploy Verdict Score</p>
+<div class="relative size-48 flex items-center justify-center">
+<svg class="size-full -rotate-90" viewbox="0 0 100 100">
+<circle class="text-slate-100" cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary" cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-dasharray="283" stroke-dashoffset="70" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-5xl font-black text-text-primary">75</span>
+<span class="text-sm text-text-secondary font-medium">Out of 100</span>
+</div>
+</div>
+<div class="mt-6 px-4 py-2 bg-primary/10 rounded-full text-primary text-xs font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                        Security health is stable
+                    </div>
+</div>
+</section>
+<!-- Stats Grid -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+<div class="bg-white rounded-2xl p-6 shadow-soft border border-border-light border-b-4 border-b-red-500 transition-transform hover:-translate-y-1">
+<p class="text-text-secondary text-xs font-bold uppercase tracking-wider">Critical</p>
+<div class="flex items-end justify-between mt-2">
+<h3 class="text-3xl font-black text-text-primary">04</h3>
+<span class="material-symbols-outlined text-red-500">dangerous</span>
+</div>
+</div>
+<div class="bg-white rounded-2xl p-6 shadow-soft border border-border-light border-b-4 border-b-orange-500 transition-transform hover:-translate-y-1">
+<p class="text-text-secondary text-xs font-bold uppercase tracking-wider">High</p>
+<div class="flex items-end justify-between mt-2">
+<h3 class="text-3xl font-black text-text-primary">12</h3>
+<span class="material-symbols-outlined text-orange-500">warning</span>
+</div>
+</div>
+<div class="bg-white rounded-2xl p-6 shadow-soft border border-border-light border-b-4 border-b-yellow-500 transition-transform hover:-translate-y-1">
+<p class="text-text-secondary text-xs font-bold uppercase tracking-wider">Medium</p>
+<div class="flex items-end justify-between mt-2">
+<h3 class="text-3xl font-black text-text-primary">28</h3>
+<span class="material-symbols-outlined text-yellow-500">report_problem</span>
+</div>
+</div>
+<div class="bg-white rounded-2xl p-6 shadow-soft border border-border-light border-b-4 border-b-blue-500 transition-transform hover:-translate-y-1">
+<p class="text-text-secondary text-xs font-bold uppercase tracking-wider">Low</p>
+<div class="flex items-end justify-between mt-2">
+<h3 class="text-3xl font-black text-text-primary">15</h3>
+<span class="material-symbols-outlined text-blue-500">info</span>
+</div>
+</div>
+</section>
+<!-- Specific Checks Grid -->
+<section class="mb-8">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-bold text-text-primary">Specific Safety Checks</h2>
+<button class="text-primary text-sm font-semibold hover:underline">View All Checks</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-white p-4 rounded-xl flex items-center gap-4 shadow-soft border border-border-light transition-colors hover:border-primary/20">
+<div class="size-10 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<p class="text-sm font-bold text-text-primary">SQL Injection</p>
+<p class="text-xs text-text-secondary">0 vulnerabilities</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl flex items-center gap-4 shadow-soft border border-border-light transition-colors hover:border-primary/20">
+<div class="size-10 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
+<span class="material-symbols-outlined">cancel</span>
+</div>
+<div>
+<p class="text-sm font-bold text-text-primary">XSS Protection</p>
+<p class="text-xs text-text-secondary">3 detected</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl flex items-center gap-4 shadow-soft border border-border-light transition-colors hover:border-primary/20">
+<div class="size-10 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div>
+<p class="text-sm font-bold text-text-primary">CSRF Tokens</p>
+<p class="text-xs text-text-secondary">Verified</p>
+</div>
+</div>
+<div class="bg-white p-4 rounded-xl flex items-center gap-4 shadow-soft border border-border-light transition-colors hover:border-primary/20">
+<div class="size-10 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined">error</span>
+</div>
+<div>
+<p class="text-sm font-bold text-text-primary">Dependency Check</p>
+<p class="text-xs text-text-secondary">8 out of date</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Detailed Vulnerability List -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-bold text-text-primary">Vulnerability Details</h2>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white border border-border-light hover:border-primary/30 transition-colors shadow-soft">Severity: All</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white border border-border-light hover:border-primary/30 transition-colors shadow-soft">Type: All</button>
+</div>
+</div>
+<div class="bg-white rounded-2xl overflow-hidden shadow-soft border border-border-light">
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-border-light text-text-secondary text-xs font-bold uppercase tracking-widest bg-slate-50">
+<th class="px-6 py-4">Severity</th>
+<th class="px-6 py-4">Vulnerability &amp; File Path</th>
+<th class="px-6 py-4">Detected</th>
+<th class="px-6 py-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-light">
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-5">
+<span class="px-2.5 py-1 rounded-md bg-red-100 text-red-600 text-[10px] font-black uppercase">Critical</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-text-primary">Hardcoded Secret Key in config</span>
+<code class="text-xs text-text-secondary mt-1">/src/config/environment.js:42</code>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-text-secondary">2h ago</td>
+<td class="px-6 py-5 text-right">
+<button class="bg-primary/10 hover:bg-primary text-primary hover:text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all">Apply Fix</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-5">
+<span class="px-2.5 py-1 rounded-md bg-orange-100 text-orange-600 text-[10px] font-black uppercase">High</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-text-primary">Unsanitized Input in Search Query</span>
+<code class="text-xs text-text-secondary mt-1">/src/controllers/search.controller.js:128</code>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-text-secondary">5h ago</td>
+<td class="px-6 py-5 text-right">
+<button class="bg-primary/10 hover:bg-primary text-primary hover:text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all">Apply Fix</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-5">
+<span class="px-2.5 py-1 rounded-md bg-yellow-100 text-yellow-600 text-[10px] font-black uppercase">Medium</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-text-primary">Deprecation Warning: lodash v4.17.20</span>
+<code class="text-xs text-text-secondary mt-1">/package.json:18</code>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-text-secondary">1d ago</td>
+<td class="px-6 py-5 text-right">
+<button class="bg-primary/10 hover:bg-primary text-primary hover:text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all">Apply Fix</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="mt-auto border-t border-border-light px-6 lg:px-12 py-8 bg-white">
+<div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-3 grayscale opacity-70">
+<span class="material-symbols-outlined text-xl text-text-primary">shield_lock</span>
+<h2 class="text-sm font-black tracking-tight uppercase text-text-primary">CodeSafe Enterprise</h2>
+</div>
+<div class="flex gap-8">
+<a class="text-xs text-text-secondary hover:text-primary transition-colors font-medium" href="#">Documentation</a>
+<a class="text-xs text-text-secondary hover:text-primary transition-colors font-medium" href="#">Support</a>
+<a class="text-xs text-text-secondary hover:text-primary transition-colors font-medium" href="#">Privacy Policy</a>
+</div>
+<p class="text-xs text-text-secondary">© 2024 CodeSafe Security Inc. All rights reserved.</p>
+</div>
+</footer>
+</div>
+</body></html>
