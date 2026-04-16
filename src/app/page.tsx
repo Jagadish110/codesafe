@@ -1862,12 +1862,12 @@ export default function SecurityPage() {
                 </div>
                 <div className="agents-term-body">
                   <div><span className="alog-ts">[00:00.000]</span><span className="alog-sys">System.Connect: Pipeline initialised — TLS 1.3 handshake complete</span></div>
-                  <div><span className="alog-ts">[00:00.142]</span><span className="alog-agent">sleuth    </span><span className="alog-task"> ── Building knowledge graph across 247 source files</span></div>
-                  <div><span className="alog-ts">[00:02.811]</span><span className="alog-agent">guardian  </span><span className="alog-task"> ── Routing files to specialist agents by risk profile</span></div>
-                  <div><span className="alog-ts">[00:05.024]</span><span className="alog-agent">hacker    </span><span className="alog-warn"> ── WARNING: Supabase anon key exposed in /src/lib/client.ts:14</span></div>
-                  <div><span className="alog-ts">[00:05.893]</span><span className="alog-agent">auditor   </span><span className="alog-warn"> ── WARNING: Missing RLS policy on `user_payments` table</span></div>
-                  <div><span className="alog-ts">[00:09.310]</span><span className="alog-agent">sentinel  </span><span className="alog-warn"> ── WARNING: SQL injection risk in /api/search/route.ts:88</span></div>
-                  <div><span className="alog-ts">[00:24.100]</span><span className="alog-agent">operator  </span><span className="alog-task"> ── Aggregating findings — generating plain English report</span></div>
+                  <div><span className="alog-ts">[00:00.142]</span><span className="alog-agent">Analyzer  </span><span className="alog-task"> ── Building knowledge graph across 247 source files</span></div>
+                  <div><span className="alog-ts">[00:02.811]</span><span className="alog-agent">Filtering </span><span className="alog-task"> ── Routing files to specialist workers by risk profile</span></div>
+                  <div><span className="alog-ts">[00:05.024]</span><span className="alog-agent">Security  </span><span className="alog-warn"> ── WARNING: Supabase anon key exposed in /src/lib/client.ts:14</span></div>
+                  <div><span className="alog-ts">[00:05.893]</span><span className="alog-agent">Backend   </span><span className="alog-warn"> ── WARNING: Missing RLS policy on `user_payments` table</span></div>
+                  <div><span className="alog-ts">[00:09.310]</span><span className="alog-agent">Injection </span><span className="alog-warn"> ── WARNING: SQL injection risk in /api/search/route.ts:88</span></div>
+                  <div><span className="alog-ts">[00:24.100]</span><span className="alog-agent">Reporter  </span><span className="alog-task"> ── Aggregating findings — generating plain English report</span></div>
                   <div><span className="alog-ts">[00:26.441]</span><span className="alog-ok">✓ Scan complete — 3 critical, 5 high, 8 medium issues found. Report ready.</span></div>
                 </div>
               </div>
@@ -1885,7 +1885,7 @@ export default function SecurityPage() {
                   <div className="step-card reveal-on-scroll" style={{ transitionDelay: '0.1s' }}>
                     <div className="step-num">2</div>
                     <div className="step-title">AI-Powered Analysis</div>
-                    <div className="step-text">Claude AI analyzes your code like a senior security engineer, tracing data flows, identifying logic flaws, and detecting exposed secrets with contextual understanding.</div>
+                    <div className="step-text">AI analyzes your code like a senior security engineer, tracing data flows, identifying logic flaws, and detecting exposed secrets with contextual understanding.</div>
                   </div>
                   <div className="step-card reveal-on-scroll" style={{ transitionDelay: '0.2s' }}>
                     <div className="step-num">3</div>
@@ -1968,19 +1968,21 @@ export default function SecurityPage() {
                   <div className="feat-text">Re-scan after fixes to track improvement. See exactly which vulnerabilities were resolved and monitor security trends.</div>
                   <div className="feat-tag">Insights</div>
                 </div>
+
                 <div className="feat-card reveal-on-scroll" style={{ transitionDelay: '0.2s' }}>
                   <div className="feat-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
                       fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"
-                      strokeLinejoin="round" className="icon-anim-pulse" style={{ color: 'var(--text-muted)' }}>
-                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                      strokeLinejoin="round" className="icon-anim-float" style={{ color: '#8b5cf6' }}>
+                      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                     </svg>
                   </div>
-                  <div className="feat-title">Shareable Reports</div>
-                  <div className="feat-text">Share comprehensive reports with your development team or stakeholders via secure links. No accounts required.</div>
-                  <div className="feat-tag">Collaboration</div>
+                  <div className="feat-title">Deep Logic Tracing</div>
+                  <div className="feat-text">Our AI traces data flows across your entire application architecture to identify complex business logic flaws and indirect permission leaks.</div>
+                  <div className="feat-tag">Advanced Search</div>
                 </div>
+
               </div>
             </section>
 
@@ -2037,7 +2039,7 @@ export default function SecurityPage() {
                     <span className="faq-icon">+</span>
                   </button>
                   <div className="faq-a">No. Your code never leaves your browser. CodeSafe reads files locally and
-                    sends only the text content directly to the Claude AI API for analysis. Nothing is stored on
+                    sends only the text content directly to the AI API for analysis. Nothing is stored on
                     any server. The API call is stateless — once the scan is done, nothing persists.</div>
                 </div>
                 <div className="faq-item reveal-on-scroll" style={{ transitionDelay: '0.1s' }}>
@@ -2054,7 +2056,7 @@ export default function SecurityPage() {
                     How accurate is it? Will I get false positives?
                     <span className="faq-icon">+</span>
                   </button>
-                  <div className="faq-a">CodeSafe uses Claude AI which reads and reasons about your code rather than
+                  <div className="faq-a">CodeSafe uses AI which reads and reasons about your code rather than
                     matching patterns. This means it catches real logic flaws and business risks that rule-based
                     tools miss, with fewer false positives. That said, always review the suggestions — no
                     automated tool is perfect.</div>
@@ -2069,15 +2071,7 @@ export default function SecurityPage() {
                     gives you numbered steps in plain English, plus the corrected code snippet you can hand to
                     your developer or paste directly.</div>
                 </div>
-                <div className="faq-item reveal-on-scroll" style={{ transitionDelay: '0.4s' }}>
-                  <button className="faq-q" onClick={(e) => (window as any).toggleFaq?.(e.currentTarget)}>
-                    Can I share the report with my developer?
-                    <span className="faq-icon">+</span>
-                  </button>
-                  <div className="faq-a">Yes. Hit &quot;Share Report&quot; after your scan and a link is generated that encodes
-                    the full report in the URL. Anyone with the link can view the complete report — no login, no
-                    account needed. You can also export it as a PDF.</div>
-                </div>
+
               </div>
             </section>
 
@@ -2086,7 +2080,7 @@ export default function SecurityPage() {
               <div className="cta-inner">
                 <h2><span className="serif">Ready to Ship</span><br /><span className="cta-banner-gradient-text">Secure Code?</span></h2>
                 <p>Professional security analysis for modern development teams. Start your free scan today.</p>
-                <button className="btn-primary" onClick={() => (window as any).showApp?.()}>Start Free Security Scan</button>
+                <button className="btn-primary" onClick={() => (window as any).handleStartScan?.()}>Start Free Security Scan</button>
               </div>
             </div>
 
@@ -2346,7 +2340,10 @@ export default function SecurityPage() {
                     e.currentTarget.style.transform = 'none';
                   }}
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
                 </div>
 
                 {/* Dropdown menu */}

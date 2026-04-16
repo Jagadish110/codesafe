@@ -76,12 +76,12 @@ async function fetchScanHistory() {
 
 window.switchPlanForTesting = async function (newTier, btn) {
     if (!currentUser) { showAuthModal('signin'); return; }
-    
+
     const origText = btn?.innerText || btn?.textContent;
-    if (btn) { 
-        btn.innerText = 'Initializing...'; 
-        btn.disabled = true; 
-        btn.style.opacity = '0.6'; 
+    if (btn) {
+        btn.innerText = 'Initializing...';
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
     }
 
     try {
@@ -110,10 +110,10 @@ window.switchPlanForTesting = async function (newTier, btn) {
     } catch (err) {
         console.error("Checkout error:", err);
         showToast('⚠ Error: ' + err.message);
-        if (btn) { 
-            btn.innerText = origText; 
-            btn.disabled = false; 
-            btn.style.opacity = '1'; 
+        if (btn) {
+            btn.innerText = origText;
+            btn.disabled = false;
+            btn.style.opacity = '1';
         }
     }
 };
@@ -475,11 +475,11 @@ function updateNavForAuth() {
 
                     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
                         ${plans.map((plan, idx) => {
-                            const planTier = plan.tier.toLowerCase();
-                            const isCurrent = planTier === activeTier || (planTier === "starter" && activeTier === "free");
-                            const pct = Math.round((plan.checks / plan.totalChecks) * 100);
+                const planTier = plan.tier.toLowerCase();
+                const isCurrent = planTier === activeTier || (planTier === "starter" && activeTier === "free");
+                const pct = Math.round((plan.checks / plan.totalChecks) * 100);
 
-                            return `
+                return `
                             <div style="
                                 border: ${plan.featured ? '2px' : '1px'} solid ${plan.featured ? plan.accentColor : 'rgba(0,0,0,0.08)'};
                                 border-radius: 20px; padding: 24px; 
@@ -541,7 +541,7 @@ function updateNavForAuth() {
                                     ${isCurrent ? 'Current Plan' : (plan.buttonText || `Get ${plan.tier} →`)}
                                 </button>
                             </div>`;
-                        }).join('')}
+            }).join('')}
                     </div>
 
                     <p style="text-align:center; font-size:13px; color:#94a3b8; margin-top:32px; font-weight:500;">
@@ -612,7 +612,7 @@ function showQuickTour() {
                 </div>
                 
                 <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:20px;">
-                    <div style="font-size:18px; font-weight:800; color:#0f172a;">${window.currentUserPlan?.plan_tier === 'pro' ? 'Pro Tier' : window.currentUserPlan?.plan_tier === 'plus' ? 'Plus Tier' : '3-Scan Trial'}</div>
+                    <div style="font-size:18px; font-weight:800; color:#0f172a;">${window.currentUserPlan?.plan_tier === 'pro' ? 'Pro Tier' : window.currentUserPlan?.plan_tier === 'plus' ? 'Plus Tier' : '1-Scan Trial'}</div>
                     <div style="font-size:10px; color:#10b981; font-weight:800; background:rgba(16,185,129,0.15); padding:6px 12px; border-radius:100px; letter-spacing:0.05em;">ACTIVE</div>
                 </div>
 
@@ -1316,8 +1316,8 @@ function handleFiles(files, name) {
 
     if (filtered.length >= 30) {
         const estMin = filtered.length >= 100 ? '6–10' :
-                       filtered.length >= 60  ? '4–6'  :
-                       filtered.length >= 30  ? '2–4'  : null;
+            filtered.length >= 60 ? '4–6' :
+                filtered.length >= 30 ? '2–4' : null;
 
         const warn = document.createElement('div');
         warn.id = 'largeFileCountWarn';
@@ -1369,18 +1369,18 @@ function handleFiles(files, name) {
 // ── Scan-type mismatch warning ─────────────────────────────────
 // Runs after file selection. Compares file paths to selected biz type
 
-const MOBILE_SIGNAL_EXTS  = new Set(['.dart', '.swift', '.kt', '.kts', '.m', '.mm', '.gradle', '.plist', '.pbxproj', '.xcconfig']);
+const MOBILE_SIGNAL_EXTS = new Set(['.dart', '.swift', '.kt', '.kts', '.m', '.mm', '.gradle', '.plist', '.pbxproj', '.xcconfig']);
 const MOBILE_SIGNAL_FILES = new Set(['app.json', 'eas.json', 'podfile', 'androidmanifest.xml']);
 
-const WEB_SIGNAL_EXTS     = new Set(['.html', '.htm', '.css', '.scss', '.sass', '.vue', '.svelte', '.astro']);
-const WEB_SIGNAL_FILES    = new Set(['next.config.js', 'next.config.ts', 'next.config.mjs', 'vite.config.js', 'vite.config.ts', 'vite.config.mjs', 'nuxt.config.js', 'nuxt.config.ts', 'svelte.config.js', 'remix.config.js', 'gatsby-config.js', 'webpack.config.js']);
+const WEB_SIGNAL_EXTS = new Set(['.html', '.htm', '.css', '.scss', '.sass', '.vue', '.svelte', '.astro']);
+const WEB_SIGNAL_FILES = new Set(['next.config.js', 'next.config.ts', 'next.config.mjs', 'vite.config.js', 'vite.config.ts', 'vite.config.mjs', 'nuxt.config.js', 'nuxt.config.ts', 'svelte.config.js', 'remix.config.js', 'gatsby-config.js', 'webpack.config.js']);
 
 let currentMismatchError = null;
 
 function checkScanTypeWarning(files) {
-    const warn     = document.getElementById('scanTypeWarn');
-    const msgEl    = document.getElementById('scanTypeWarnMsg');
-    const titleEl  = document.getElementById('scanTypeWarnTitle');
+    const warn = document.getElementById('scanTypeWarn');
+    const msgEl = document.getElementById('scanTypeWarnMsg');
+    const titleEl = document.getElementById('scanTypeWarnTitle');
     const switchBtn = document.getElementById('scanTypeWarnSwitch');
     currentMismatchError = null;
 
@@ -1402,24 +1402,24 @@ function checkScanTypeWarning(files) {
     let showIt = false, title = '', msg = '', switchLabel = '', switchTarget = '';
 
     if (currentBiz === 'mobile' && webCount > 0 && mobileCount === 0) {
-        showIt       = true;
-        title        = '\uD83D\uDDA5\uFE0F Looks like a web project';
-        msg          = `Found ${webCount} web-specific files (HTML/CSS, Next.js, Vite, etc.) but no mobile files. Did you mean Web App? Scanning with the incorrect project type will affect your security results.`;
-        switchLabel  = 'Switch to Web App \u2192';
+        showIt = true;
+        title = '\uD83D\uDDA5\uFE0F Looks like a web project';
+        msg = `Found ${webCount} web-specific files (HTML/CSS, Next.js, Vite, etc.) but no mobile files. Did you mean Web App? Scanning with the incorrect project type will affect your security results.`;
+        switchLabel = 'Switch to Web App \u2192';
         switchTarget = 'saas';
         currentMismatchError = "These look like web files, but you selected Mobile App. Please switch the scan type or upload a mobile project.";
     } else if ((currentBiz === 'saas' || currentBiz === 'api' || currentBiz === 'ecommerce' || currentBiz === 'fintech') && mobileCount > 0 && webCount === 0) {
-        showIt       = true;
-        title        = '\uD83D\uDCF1 Looks like a mobile project';
-        msg          = `Found ${mobileCount} mobile-specific files (.dart/.swift/build.gradle etc.) but no web files. Did you mean Mobile App? Scanning with the incorrect project type will affect your security results.`;
-        switchLabel  = 'Switch to Mobile App \u2192';
+        showIt = true;
+        title = '\uD83D\uDCF1 Looks like a mobile project';
+        msg = `Found ${mobileCount} mobile-specific files (.dart/.swift/build.gradle etc.) but no web files. Did you mean Mobile App? Scanning with the incorrect project type will affect your security results.`;
+        switchLabel = 'Switch to Mobile App \u2192';
         switchTarget = 'mobile';
         currentMismatchError = "These look like mobile files, but you selected a Web/API App. Please switch the scan type or upload a web project.";
     }
 
     if (showIt) {
         if (titleEl) titleEl.textContent = title;
-        if (msgEl)   msgEl.textContent   = msg;
+        if (msgEl) msgEl.textContent = msg;
         if (switchBtn) {
             switchBtn.textContent = switchLabel;
             const fresh = switchBtn.cloneNode(true);

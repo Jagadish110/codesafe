@@ -205,8 +205,8 @@ async function callWithRetry(
       if (isRetryable && attempt < retries) {
         // Longer base for 503 (model busy) vs 429 (quota)
         const is503 = msg.includes("503") || msg.includes("UNAVAILABLE") || msg.includes("high demand");
-        const baseMs  = is503 ? 6000 : 1000;
-        const delay   = Math.min(Math.pow(2, attempt) * baseMs + Math.random() * 1000, 30_000);
+        const baseMs = is503 ? 6000 : 1000;
+        const delay = Math.min(Math.pow(2, attempt) * baseMs + Math.random() * 1000, 30_000);
         console.log(
           `[Agent] Retryable error (${err?.statusCode ?? msg.slice(0, 40)}), ` +
           `waiting ${Math.round(delay / 1000)}s before attempt ${attempt + 2}/${retries + 1}`
@@ -222,14 +222,18 @@ async function callWithRetry(
 }
 
 // ── Call Gemini API ───────────────────────────────────────────────────────────
+// model is passed in by each agent (resolved from its own env var or the shared default)
 
-async function callGemini(systemPrompt: string, userMessage: string): Promise<string> {
+async function callGemini(
+  systemPrompt: string,
+  userMessage: string,
+  model: string
+): Promise<string> {
   const apiKey = process.env.GOOGLE_API_KEY;
   if (!apiKey) {
     throw new Error("GOOGLE_API_KEY is not set");
   }
 
-  const model = "gemini-3.1-flash-lite-preview";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
   const response = await fetch(url, {
@@ -266,6 +270,10 @@ async function callGemini(systemPrompt: string, userMessage: string): Promise<st
 }
 
 // ── Core agent runner ─────────────────────────────────────────────────────────
+// All agents share one model defined by GEMINI_MODEL in .env.
+// Falls back to gemini-2.0-flash if the env var is not set.
+
+const GEMINI_FALLBACK_MODEL = "gemini-2.0-flash";
 
 export async function runAgent(
   agentId: AgentId,
@@ -273,6 +281,9 @@ export async function runAgent(
   route: AgentRoute
 ): Promise<AgentResult> {
   const start = Date.now();
+
+  // Read shared model from env — change GEMINI_MODEL in .env to switch all agents at once
+  const model = process.env.GEMINI_MODEL ?? GEMINI_FALLBACK_MODEL;
 
   if (route.files.length === 0) {
     return {
@@ -288,12 +299,12 @@ export async function runAgent(
     ? systemPrompt + MOBILE_CONTEXT_ADDENDUM
     : systemPrompt;
 
-  console.log(`[Agent ${agentId}] Starting scan of ${route.files.length} files (scanType=${route.scanType ?? 'web'})`);
+  console.log(`[Agent ${agentId}] Starting scan of ${route.files.length} files (model=${model}, scanType=${route.scanType ?? 'web'})`);
 
   try {
     const rawText = await withTimeout(
       callWithRetry(() =>
-        callGemini(effectivePrompt, buildUserMessage(route))
+        callGemini(effectivePrompt, buildUserMessage(route), model)
       ),
       AGENT_TIMEOUT_MS
     );
