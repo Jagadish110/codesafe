@@ -1358,7 +1358,7 @@ const DashboardReport: React.FC = () => {
                     const checkPct = Math.round((planChecksCount / TOTAL_CHECKS) * 100);
                     const isNearLimit = scansUsed >= pl.scansPerMonth - 1;
                     return (
-                      <div style={{
+                      <div className="dashboard-status-banner" style={{
                         background: 'rgba(255, 255, 255, 0.95)',
                         backdropFilter: 'blur(10px)',
                         border: `1.5px solid ${isNearLimit ? 'rgba(225,29,72,0.4)' : '#e2e8f0'}`,
@@ -1366,7 +1366,8 @@ const DashboardReport: React.FC = () => {
                         padding: '10px 24px',
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 24,
+                        flexWrap: 'wrap', // Added for mobile
+                        gap: '12px 24px', // Adjusted gap
                         boxShadow: isNearLimit ? '0 0 0 4px rgba(225,29,72,0.1)' : '0 8px 24px rgba(0,0,0,0.06)',
                         width: '100%',
                         maxWidth: '1100px',
@@ -1393,7 +1394,7 @@ const DashboardReport: React.FC = () => {
                         </div>
 
                         {/* Divider */}
-                        <div style={{ width: 1, height: 40, background: '#e2e8f0', flexShrink: 0 }} />
+                        <div className="divider-v" style={{ width: 1, height: 40, background: '#e2e8f0', flexShrink: 0 }} />
 
                         {/* Scans meter */}
                         <div style={{ flex: '1 1 140px', minWidth: 120 }}>
@@ -1408,7 +1409,7 @@ const DashboardReport: React.FC = () => {
                         </div>
 
                         {/* Divider */}
-                        <div style={{ width: 1, height: 40, background: '#e2e8f0', flexShrink: 0 }} />
+                        <div className="divider-v" style={{ width: 1, height: 40, background: '#e2e8f0', flexShrink: 0 }} />
 
                         {/* Code limit */}
                         <div style={{ flexShrink: 0 }}>
@@ -1418,7 +1419,7 @@ const DashboardReport: React.FC = () => {
                         </div>
 
                         {/* Divider */}
-                        <div style={{ width: 1, height: 40, background: '#e2e8f0', flexShrink: 0 }} />
+                        <div className="divider-v" style={{ width: 1, height: 40, background: '#e2e8f0', flexShrink: 0 }} />
 
                         {/* Checks */}
                         <div style={{ flex: '1 1 120px', minWidth: 100 }}>

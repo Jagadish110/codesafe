@@ -107,13 +107,11 @@ body::-webkit-scrollbar {
     text-decoration: none;
 }
 
-.logo-pip {
-    width: 7px;
-    height: 7px;
-    background: var(--red);
-    border-radius: 50%;
-    animation: none !important;
-
+.logo-img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border-radius: 6px;
 }
 
 @keyframes pip {

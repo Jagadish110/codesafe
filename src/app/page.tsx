@@ -674,13 +674,14 @@ export default function SecurityPage() {
             text-decoration: none !important;
         }
 
-        .logo-pip {
-            width: 8px !important;
-            height: 8px !important;
-            background: var(--accent) !important;
-            border-radius: 50% !important;
-            box-shadow: 0 0 10px var(--accent-glow) !important;
+        .logo-img {
+            width: 28px !important;
+            height: 28px !important;
+            object-fit: contain !important;
+            border-radius: 6px !important;
         }
+
+        .logo-pip { display: none !important; }
 
         .nav-links {
             display: flex !important;
@@ -1149,6 +1150,43 @@ export default function SecurityPage() {
             text-align: center !important;
         }
 
+        /* ── RESPONSIVE DESIGN (Mobile Fixes) ── */
+        @media (max-width: 900px) {
+            .section-title { font-size: 42px !important; }
+            .features-grid, .coverage-grid { 
+                grid-template-columns: repeat(2, 1fr) !important; 
+                gap: 16px !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .section { padding: 60px 20px !important; }
+            .section-title { font-size: 32px !important; }
+            .section-sub { font-size: 16px !important; margin-bottom: 40px !important; }
+            
+            .features-grid, .coverage-grid { 
+                grid-template-columns: 1fr !important; 
+                padding: 0 10px !important;
+            }
+            
+            .feat-card { min-height: auto !important; padding: 40px 20px 24px !important; }
+            
+            .nav { padding: 0 20px !important; }
+            .nav-links { display: none !important; } /* Hide desktop links on mobile for now */
+            
+            .hero-badge { font-size: 11px !important; padding: 6px 12px !important; }
+            .hero-title { font-size: 40px !important; }
+            .hero-sub { font-size: 16px !important; }
+            
+            /* Fix terminal demo scale */
+            .terminal-demo { 
+                transform: scale(0.9) !important; 
+                margin: 0 -20px !important;
+            }
+            
+            .tool-badge { padding: 10px 20px !important; font-size: 14px !important; }
+        }
+
         .footer-logo {
             display: flex !important;
             align-items: center !important;
@@ -1249,7 +1287,7 @@ export default function SecurityPage() {
 
             <div className="auth-hdr">
               <div className="auth-logo">
-                <div className="logo-pip"></div>
+                <img src="/logo.png" alt="CodeSafe" className="logo-img" />
                 CodeSafe
               </div>
               <h2 className="auth-title" id="authTitle">Create your account</h2>
@@ -1297,7 +1335,7 @@ export default function SecurityPage() {
       ═══════════════════════════════ */}
         <nav className="nav">
           <a className="nav-logo" onClick={() => (window as any).showLanding?.()}>
-            <div className="logo-pip"></div>
+            <img src="/logo.png" alt="CodeSafe" className="logo-img" />
             CodeSafe
           </a>
           <ul className="nav-links">
@@ -2087,7 +2125,7 @@ export default function SecurityPage() {
             {/* FOOTER */}
             <footer className="footer">
               <div className="footer-logo">
-                <div className="logo-pip"></div>
+                <img src="/logo.png" alt="CodeSafe" className="logo-img" />
                 CodeSafe
               </div>
               <div className="footer-copy">© 2026 CodeSafe. Enterprise-grade security, simplified.</div>
