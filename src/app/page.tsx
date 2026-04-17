@@ -3,7 +3,31 @@
 import Script from 'next/script';
 import DashboardReport from './DashboardReport';
 import Pricing, { PRICING_DATA, PLAN_LIMITS, TOTAL_CHECKS } from './Pricing';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
+
+function CheckoutAlert() {
+  const params = useSearchParams();
+  const checkout = params.get('checkout');
+  const status = params.get('status');
+
+  if (!checkout && !status) return null;
+
+  return (
+    <div style={{ padding: '16px', textAlign: 'center', background: '#fff', borderBottom: '1px solid #e2e8f0', zIndex: 9999, position: 'relative' }}>
+      {checkout === 'success' && status !== 'failed' && (
+        <div style={{ color: 'var(--success)', fontSize: '18px', fontWeight: 600 }}>
+          ✅ Payment successful! Your plan is now active.
+        </div>
+      )}
+      {status === 'failed' && (
+        <div style={{ color: 'var(--error)', fontSize: '18px', fontWeight: 600 }}>
+          ❌ Payment failed. Please try again or contact support.
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function SecurityPage() {
   const [businessType, setBusinessType] = useState('saas');
@@ -152,6 +176,9 @@ export default function SecurityPage() {
   };
   return (
     <>
+      <Suspense fallback={null}>
+        <CheckoutAlert />
+      </Suspense>
       {/* ─── Google Fonts for the security scanner ─── */}
       {/* eslint-disable-next-line @next/next/no-page-custom-font */}
       <style dangerouslySetInnerHTML={{
