@@ -33,12 +33,20 @@ export async function POST(req: NextRequest) {
     }
 
     // 2. Map the tier to your Dodo Product IDs
-    const productId = tier === 'pro' 
-      ? process.env.DODO_PRO_PRODUCT_ID 
-      : process.env.DODO_PLUS_PRODUCT_ID;
+    const tierKey = tier.toLowerCase(); // normalize e.g. "Starter" → "starter"
+    const PRODUCT_MAP: Record<string, string | undefined> = {
+      test:    process.env.DODO_TEST_PRODUCT_ID,
+      starter: process.env.DODO_STARTER_PRODUCT_ID,
+      pro:     process.env.DODO_PRO_PRODUCT_ID,
+      plus:    process.env.DODO_PLUS_PRODUCT_ID,
+    };
+
+    const productId = PRODUCT_MAP[tierKey];
 
     if (!productId) {
-      return NextResponse.json({ error: 'Pricing tier not configured' }, { status: 400 });
+      return NextResponse.json({ 
+        error: `Pricing tier "${tier}" is not configured. Check your DODO_*_PRODUCT_ID env vars.` 
+      }, { status: 400 });
     }
 
     // 3. Create a Checkout Session
