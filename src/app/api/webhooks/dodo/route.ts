@@ -2,25 +2,27 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Webhook } from 'standardwebhooks';
 import { createClient } from '@supabase/supabase-js';
 
-// Use a Supabase service-role client so we can bypass RLS for webhook updates
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// ✅ Lazy getter — only runs at request time, never at build time
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+}
 
-// Map Dodo product IDs → plan tiers (all 3 plans + test)
-const PRODUCT_TO_TIER: Record<string, string> = {
-  [process.env.DODO_TEST_PRODUCT_ID!]:    'test',
-  [process.env.DODO_STARTER_PRODUCT_ID!]: 'starter',
-  [process.env.DODO_PRO_PRODUCT_ID!]:     'pro',
-  [process.env.DODO_PLUS_PRODUCT_ID!]:    'plus',
-};
+// ✅ Moved inside a function so env vars are read at runtime
+function getProductToTier(): Record<string, string> {
+  return {
+    [process.env.DODO_TEST_PRODUCT_ID!]: 'test',
+    [process.env.DODO_STARTER_PRODUCT_ID!]: 'starter',
+    [process.env.DODO_PRO_PRODUCT_ID!]: 'pro',
+    [process.env.DODO_PLUS_PRODUCT_ID!]: 'plus',
+  };
+}
 
 export async function POST(req: NextRequest) {
-  // ── 1. Read raw body ──────────────────────────────────────────────────
   const rawBody = await req.text();
 
-  // ── 2. Verify webhook signature ───────────────────────────────────────
   const webhookSecret = process.env.DODO_PAYMENTS_WEBHOOK_KEY;
   if (!webhookSecret) {
     console.error('[Webhook] DODO_PAYMENTS_WEBHOOK_KEY is not set');
@@ -40,7 +42,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid webhook signature' }, { status: 401 });
   }
 
-  // ── 3. Parse and route event ──────────────────────────────────────────
   let event: any;
   try {
     event = JSON.parse(rawBody);
@@ -52,30 +53,15 @@ export async function POST(req: NextRequest) {
   console.log('[Webhook] Received event:', eventType);
 
   try {
-    // ── payment.succeeded ──────────────────────────────────────────────
     if (eventType === 'payment.succeeded') {
       await handlePaymentSucceeded(event);
-    }
-
-    // ── subscription.active ────────────────────────────────────────────
-    else if (eventType === 'subscription.active') {
+    } else if (eventType === 'subscription.active') {
       await handleSubscriptionActive(event);
-    }
-
-    // ── subscription.cancelled / subscription.expired ──────────────────
-    else if (
-      eventType === 'subscription.cancelled' ||
-      eventType === 'subscription.expired'
-    ) {
+    } else if (eventType === 'subscription.cancelled' || eventType === 'subscription.expired') {
       await handleSubscriptionEnded(event);
-    }
-
-    // ── payment.failed ─────────────────────────────────────────────────
-    else if (eventType === 'payment.failed') {
+    } else if (eventType === 'payment.failed') {
       await handlePaymentFailed(event);
-    }
-
-    else {
+    } else {
       console.log('[Webhook] Unhandled event type:', eventType);
     }
   } catch (err) {
@@ -83,15 +69,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to process event' }, { status: 500 });
   }
 
-  // Always return 200 to acknowledge receipt
   return NextResponse.json({ received: true });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// HANDLERS
-// ─────────────────────────────────────────────────────────────────────────────
-
 async function handlePaymentSucceeded(event: any) {
+  const supabase = getSupabase(); // ✅
   const data = event.data ?? event;
 
   const userId = data.metadata?.user_id;
@@ -104,17 +86,15 @@ async function handlePaymentSucceeded(event: any) {
     return;
   }
 
-  // Log to payment_events
   await supabase.from('payment_events').insert({
     user_id: userId,
     event_type: 'payment.succeeded',
     plan_tier: tier,
     amount_cents: data.total_amount ?? null,
-    stripe_event_id: paymentId, // reusing this column for dodo payment id
+    stripe_event_id: paymentId,
     payload: data,
   });
 
-  // Upgrade user plan
   await supabase
     .from('user_plans')
     .update({
@@ -131,6 +111,7 @@ async function handlePaymentSucceeded(event: any) {
 }
 
 async function handleSubscriptionActive(event: any) {
+  const supabase = getSupabase(); // ✅
   const data = event.data ?? event;
 
   const userId = data.metadata?.user_id;
@@ -138,8 +119,7 @@ async function handleSubscriptionActive(event: any) {
   const subscriptionId = data.subscription_id ?? data.id;
   const customerId = data.customer?.customer_id ?? data.customer_id;
 
-  // Fallback: derive tier from product_id
-  const resolvedTier = tier ?? PRODUCT_TO_TIER[data.product_id] ?? null;
+  const resolvedTier = tier ?? getProductToTier()[data.product_id] ?? null; // ✅
 
   if (!userId || !resolvedTier) {
     console.warn('[Webhook] subscription.active missing user_id or tier', data);
@@ -170,10 +150,10 @@ async function handleSubscriptionActive(event: any) {
 }
 
 async function handleSubscriptionEnded(event: any) {
+  const supabase = getSupabase(); // ✅
   const data = event.data ?? event;
   const subscriptionId = data.subscription_id ?? data.id;
 
-  // Find user by dodo_subscription_id
   const { data: plan, error } = await supabase
     .from('user_plans')
     .select('user_id')
@@ -205,6 +185,7 @@ async function handleSubscriptionEnded(event: any) {
 }
 
 async function handlePaymentFailed(event: any) {
+  const supabase = getSupabase(); // ✅
   const data = event.data ?? event;
   const userId = data.metadata?.user_id;
   const paymentId = data.payment_id ?? data.id;
