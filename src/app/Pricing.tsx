@@ -58,7 +58,7 @@ export const PRICING_DATA = [
   },
   {
     tier: "Test",
-    price: "₹2",
+    price: "₹10",
     period: "One-time",
     subPeriod: "Dev test only",
     desc: "Live payment test. Verifies checkout & webhook end-to-end.",
