@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
         user_id: user.id,
         tier: tierKey, // ✅ normalized lowercase so webhook PRODUCT_TO_TIER matches
       },
-      return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard?checkout=success`,
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/?checkout=success`,
     });
 
     return NextResponse.json({ checkoutUrl: session.checkout_url });
