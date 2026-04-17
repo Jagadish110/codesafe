@@ -16,6 +16,8 @@ function getSupabase() {
             window.SUPABASE_URL,
             window.SUPABASE_ANON_KEY
         );
+        // Expose globally so React components (Pricing.tsx) can reuse the same client
+        window._sbClient = sbClient;
     }
     return sbClient;
 }
@@ -88,15 +90,25 @@ window.switchPlanForTesting = async function (newTier, btn) {
         // Enforce proper casing for the API (Starter, Pro, Plus)
         const formattedTier = newTier.charAt(0).toUpperCase() + newTier.slice(1).toLowerCase();
 
+        // Get access token from the CDN Supabase session
+        let accessToken = '';
+        const sb = getSupabase();
+        if (sb) {
+            const { data } = await sb.auth.getSession();
+            accessToken = data?.session?.access_token || '';
+        }
+        if (!accessToken) {
+            showToast('⚠ Please sign in to continue');
+            if (btn) { btn.innerText = origText; btn.disabled = false; btn.style.opacity = '1'; }
+            return;
+        }
+
         const response = await fetch('/api/checkout', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 tier: formattedTier,
-                email: currentUser.email,
-                metadata: {
-                    userId: currentUser.id
-                }
+                accessToken: accessToken,
             }),
         });
 

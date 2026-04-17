@@ -125,10 +125,29 @@ export default function Pricing() {
   const handleCheckout = async (tier: string, plan: any) => {
     try {
       setLoadingTier(tier);
+
+      // Get access token from the CDN Supabase client (exposed by app.js as window._sbClient)
+      let accessToken = '';
+      try {
+        const sb = (window as any)._sbClient;
+        if (sb) {
+          const { data } = await sb.auth.getSession();
+          accessToken = data?.session?.access_token || '';
+        }
+      } catch (e) {
+        console.warn('Could not get Supabase session:', e);
+      }
+
+      if (!accessToken) {
+        alert('Please sign in to continue.');
+        setLoadingTier(null);
+        return;
+      }
+
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tier }),
+        body: JSON.stringify({ tier, accessToken }),
       });
 
       const data = await res.json();

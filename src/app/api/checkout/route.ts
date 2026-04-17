@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import DodoPayments from 'dodopayments';
-import { createServerClient } from '@supabase/ssr';
+import { createClient } from '@supabase/supabase-js';
 
 const client = new DodoPayments({
   bearerToken: process.env.DODO_PAYMENTS_API_KEY!,
@@ -9,26 +9,27 @@ const client = new DodoPayments({
 
 export async function POST(req: NextRequest) {
   try {
-    const { tier } = await req.json();
+    const { tier, accessToken } = await req.json();
 
-    // ✅ Read cookies from the request object directly — handles chunked tokens
-    const supabase = createServerClient(
+    // ✅ Accept access token from the request body (sent by client-side Supabase CDN auth)
+    //    This fixes the 401 issue caused by the CDN client storing tokens in localStorage
+    //    instead of cookies, which the SSR createServerClient couldn't read.
+    const token = accessToken || req.headers.get('Authorization')?.replace('Bearer ', '');
+
+    if (!token) {
+      return NextResponse.json({ error: 'Please sign in to continue' }, { status: 401 });
+    }
+
+    // Use the service-role client to verify the user via their access token
+    const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return req.cookies.getAll(); // reads ALL cookie chunks correctly
-          },
-          setAll() {
-            // no-op — we don't need to set cookies in an API route
-          },
-        },
-      }
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      console.error('Auth verification failed:', authError?.message);
       return NextResponse.json({ error: 'Please sign in to continue' }, { status: 401 });
     }
 
