@@ -4,27 +4,83 @@ import Script from 'next/script';
 import DashboardReport from './DashboardReport';
 import Pricing, { PRICING_DATA, PLAN_LIMITS, TOTAL_CHECKS } from './Pricing';
 import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 function CheckoutAlert() {
   const params = useSearchParams();
+  const router = useRouter();
   const checkout = params.get('checkout');
   const status = params.get('status');
+  const [visible, setVisible] = useState(false);
 
-  if (!checkout && !status) return null;
+  useEffect(() => {
+    if (checkout || status) {
+      setVisible(true);
+      // Clean up the URL parameters so it doesn't persist on refresh
+      setTimeout(() => {
+        router.replace('/', { scroll: false });
+      }, 500);
+      
+      // Auto-hide the toast after 6 seconds
+      const timer = setTimeout(() => setVisible(false), 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [checkout, status, router]);
+
+  if (!visible) return null;
+
+  const isSuccess = checkout === 'success' && status !== 'failed';
+  const isError = status === 'failed';
 
   return (
-    <div style={{ padding: '16px', textAlign: 'center', background: '#fff', borderBottom: '1px solid #e2e8f0', zIndex: 9999, position: 'relative' }}>
-      {checkout === 'success' && status !== 'failed' && (
-        <div style={{ color: 'var(--success)', fontSize: '18px', fontWeight: 600 }}>
-          ✅ Payment successful! Your plan is now active.
-        </div>
+    <div style={{
+      position: 'fixed', top: '108px', left: '50%', transform: 'translateX(-50%)',
+      zIndex: 10000,
+      background: 'rgba(255, 255, 255, 0.96)',
+      backdropFilter: 'blur(24px) saturate(160%)',
+      WebkitBackdropFilter: 'blur(24px) saturate(160%)',
+      border: `1px solid ${isSuccess ? 'rgba(5, 150, 105, 0.15)' : 'rgba(225, 29, 72, 0.15)'}`,
+      borderRadius: '99px',
+      padding: '12px 16px 12px 20px',
+      display: 'flex', alignItems: 'center', gap: '14px',
+      boxShadow: '0 20px 40px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.05)',
+      animation: 'toastSlideDown 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
+    }}>
+      <style>{`
+        @keyframes toastSlideDown {
+          0% { opacity: 0; transform: translate(-50%, -20px); }
+          100% { opacity: 1; transform: translate(-50%, 0); }
+        }
+        .toast-close-btn:hover { background: rgba(15, 23, 42, 0.05); color: #0f172a; }
+      `}</style>
+      
+      {isSuccess && (
+        <>
+          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--success-dim)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '12px' }}>
+            <span style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.3px' }}>Payment Successful</span>
+            <span style={{ fontSize: '13px', color: '#64748b' }}>Your CodeSafe plan is now active.</span>
+          </div>
+        </>
       )}
-      {status === 'failed' && (
-        <div style={{ color: 'var(--error)', fontSize: '18px', fontWeight: 600 }}>
-          ❌ Payment failed. Please try again or contact support.
-        </div>
+
+      {isError && (
+        <>
+          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--error-dim)', color: 'var(--error)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', paddingRight: '12px' }}>
+            <span style={{ fontSize: '14px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.3px' }}>Payment Failed</span>
+            <span style={{ fontSize: '13px', color: '#64748b' }}>There was an issue processing your payment.</span>
+          </div>
+        </>
       )}
+
+      <button onClick={() => setVisible(false)} className="toast-close-btn" style={{ background: 'transparent', border: 'none', padding: '6px', cursor: 'pointer', color: '#94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', transition: 'all 0.2s' }}>
+         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
     </div>
   );
 }
