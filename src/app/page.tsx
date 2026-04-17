@@ -21,9 +21,7 @@ function CheckoutAlert() {
         router.replace('/', { scroll: false });
       }, 500);
       
-      // Auto-hide the toast after 6 seconds
-      const timer = setTimeout(() => setVisible(false), 6000);
-      return () => clearTimeout(timer);
+// removed auto-hide per user request so the user can see it until they click x
     }
   }, [checkout, status, router]);
 
