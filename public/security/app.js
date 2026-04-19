@@ -876,7 +876,10 @@ async function handleGoogleAuth() {
     const { data, error } = await sb.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: window.location.origin
+            redirectTo: window.location.origin,
+            queryParams: {
+                prompt: 'select_account consent'
+            }
         }
     });
 
@@ -1046,7 +1049,10 @@ document.addEventListener('click', async (e) => {
             provider: 'github',
             options: {
                 scopes: 'repo',
-                redirectTo: window.location.origin + window.location.pathname
+                redirectTo: window.location.origin + window.location.pathname,
+                queryParams: {
+                    prompt: 'consent'
+                }
             }
         });
         return;
@@ -1173,6 +1179,7 @@ async function fetchGithub() {
             } catch (e) { }
         }
         hideErr(); codeSnapshot = code; folderName = `${owner}/${cleanRepo}`;
+        folderFiles = files; // Ensure folderFiles is populated for accurate stats
         const fName = $('fName'), fSizeEl = $('fSize'), fileRow = $('fileRow'), scanBtn = $('scanBtn');
         if (fName) fName.textContent = `🔗 ${owner}/${cleanRepo}`;
         if (fSizeEl) fSizeEl.textContent = `${fetched} files fetched from GitHub`;

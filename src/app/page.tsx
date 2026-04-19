@@ -16,12 +16,9 @@ function CheckoutAlert() {
   useEffect(() => {
     if (checkout || status) {
       setVisible(true);
-      // Clean up the URL parameters so it doesn't persist on refresh
-      setTimeout(() => {
-        router.replace('/', { scroll: false });
-      }, 500);
-      
-// removed auto-hide per user request so the user can see it until they click x
+      // Auto-hide the toast after 6 seconds per user request
+      const timer = setTimeout(() => setVisible(false), 6000);
+      return () => clearTimeout(timer);
     }
   }, [checkout, status, router]);
 
@@ -75,10 +72,6 @@ function CheckoutAlert() {
           </div>
         </>
       )}
-
-      <button onClick={() => setVisible(false)} className="toast-close-btn" style={{ background: 'transparent', border: 'none', padding: '6px', cursor: 'pointer', color: '#94a3b8', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', transition: 'all 0.2s' }}>
-         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
     </div>
   );
 }

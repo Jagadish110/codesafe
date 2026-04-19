@@ -56,24 +56,7 @@ export const PRICING_DATA = [
     accentGlow: "rgba(245,158,11,0.12)",
     gradient: "linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)",
   },
-  {
-    tier: "Test",
-    price: "₹10",
-    period: "One-time",
-    subPeriod: "Dev test only",
-    desc: "Live payment test. Verifies checkout & webhook end-to-end.",
-    checks: 5,
-    totalChecks: TOTAL_CHECKS,
-    scans: 1,
-    codeLimit: "1 MB",
-    highlights: ["Tests live Dodo checkout", "Verifies webhook → DB upgrade", "Remove before launch"],
-    buttonText: "Pay ₹2 →",
-    featured: false,
-    isTest: true,
-    accentColor: "#ef4444",
-    accentGlow: "rgba(239,68,68,0.12)",
-    gradient: "linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%)",
-  }
+
 ];
 
 export const PLAN_LIMITS = {

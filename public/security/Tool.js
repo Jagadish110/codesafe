@@ -1379,7 +1379,7 @@ RULES:
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 provider: 'google',
-                endpoint: `models/${model}:generateContent`,
+                // Removing endpoint from here so the backend dynamically fetches it from process.env.GEMINI_MODEL (.env.local)
                 payload: {
                     systemInstruction: { parts: [{ text: system }] },
                     contents: [{ role: 'user', parts: [{ text: user }] }],
@@ -1597,7 +1597,9 @@ RULES:
 
 };
 
-/* â”€â”€â”€ Export (Node / bundler) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* â”€â”€â”€ Export (Node / bundler)  Compiling /api/scan ...
+ POST /api/scan 502 in 5.1min (compile: 3.6s, proxy.ts: 20ms, render: 5.1min)
+ */
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = TOOLS;
 }

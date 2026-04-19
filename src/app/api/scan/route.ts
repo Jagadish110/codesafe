@@ -177,9 +177,13 @@ async function handleGemini(req: NextRequest) {
   try {
     upstream = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Connection": "close" // Prevent socket hang due to keep-alive issues in node fetch
+      },
       body: JSON.stringify(body.payload ?? {}),
-    });
+      signal: AbortSignal.timeout(120000) // 120 second timeout
+    } as RequestInit);
   } catch (err: any) {
     return NextResponse.json(
       { error: `Failed to reach Gemini API: ${err?.message}` },
