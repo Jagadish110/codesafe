@@ -177,7 +177,7 @@ async function handleGemini(req: NextRequest) {
   try {
     upstream = await fetch(url, {
       method: "POST",
-      headers: { 
+      headers: {
         "Content-Type": "application/json",
         "Connection": "close" // Prevent socket hang due to keep-alive issues in node fetch
       },

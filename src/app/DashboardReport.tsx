@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { PLAN_LIMITS, TOTAL_CHECKS } from './Pricing';
 import { RecentScans } from './RecentScans';
 import { vibeCheck, generateVibeReportCard } from '../../codesafe/lib/vibe-check';
-import { ShieldAlert, AlertTriangle, AlertCircle, Info, FileCode2, Database, KeyRound, Globe, Users, Zap, Lock, ShieldCheck, Factory, Search, CheckCircle2, Activity, MessageSquare } from 'lucide-react';
+import { ShieldAlert, AlertTriangle, AlertCircle, Info, FileCode2, Database, KeyRound, Globe, Users, Zap, Lock, ShieldCheck, Factory, Search, CheckCircle2, Activity, MessageSquare, Heart } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 declare global {
   interface Window {
@@ -571,6 +572,10 @@ const CSS = `
   .cs-code{background:var(--bg-secondary);border-radius:16px;overflow:hidden;margin-top:8px;border:1px solid var(--border)}
   .cs-upsell{padding:16px 20px;background:var(--surface2);display:flex;align-items:center;gap:8px;border-top:1px solid var(--border)}
   .cs-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:12px;color:var(--text-muted)}
+  @media (max-width: 1024px) {
+    .cs-top { grid-template-columns: 1fr; }
+    .cs-side { position: static !important; width: 100% !important; }
+  }
 `;
 
 // ── Component ──────────────────────────────────────────────────────────────
@@ -592,6 +597,43 @@ const DashboardReport: React.FC = () => {
   const [showGraphViewer, setShowGraphViewer] = useState<boolean>(false);
   const [currentScanId, setCurrentScanId] = useState<string | null>(null);
   const [activeExplainId, setActiveExplainId] = useState<number | null>(null);
+  const [feedback, setFeedback] = useState('');
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [feedbackSuccess, setFeedbackSuccess] = useState(false);
+
+  const handleFeedbackSubmit = async () => {
+    if (!feedback.trim()) return;
+    setIsSubmittingFeedback(true);
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const { error } = await supabase
+        .from('user_feedback')
+        .insert([{
+          content: feedback,
+          user_id: user?.id,
+          user_email: user?.email,
+          scan_id: reportData?.scanId || currentScanId,
+          metadata: {
+            project_name: reportData?.project_name,
+            score: reportData?.score,
+            verdict: reportData?.verdict
+          }
+        }]);
+
+      if (error) throw error;
+
+      setFeedbackSuccess(true);
+      setFeedback('');
+      setTimeout(() => setFeedbackSuccess(false), 5000);
+    } catch (error) {
+      console.error('Feedback submission failed', error);
+      alert('Failed to send feedback. Please try again.');
+    } finally {
+      setIsSubmittingFeedback(false);
+    }
+  };
 
   // ── Plan limits sourced from central Pricing.tsx ────────────────────────────
   const PLAN_LIMITS_LOCAL = PLAN_LIMITS as any;
@@ -2381,7 +2423,101 @@ const DashboardReport: React.FC = () => {
                 {/* SIDEBAR */}
                 <div className="cs-side" style={{ position: 'sticky', top: 20 }}>
 
+                  {/* FEEDBACK SECTION */}
+                  <div className="cs-card" style={{ padding: 20, background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)', border: '1px solid #e2e8f0', borderRadius: 24, boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                      <div style={{ width: 32, height: 32, borderRadius: 10, background: '#fff1eb', color: '#f95700', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <Heart size={18} fill="#f95700" />
+                      </div>
+                      <span style={{ fontSize: 14, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.2px' }}>Improve CodeSafe</span>
+                    </div>
+                    
+                    <p style={{ fontSize: 11.5, color: '#64748B', marginBottom: 14, lineHeight: 1.5, fontWeight: 500 }}>
+                      Spotted a bug or have an idea? Help us build the future of AI security.
+                    </p>
 
+                    {feedbackSuccess ? (
+                      <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: 16, padding: '16px 12px', textAlign: 'center', animation: 'csFadeIn 0.3s ease-out' }}>
+                        <CheckCircle2 size={24} color="#16A34A" style={{ margin: '0 auto 8px' }} />
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#166534', marginBottom: 2 }}>Awesome!</div>
+                        <div style={{ fontSize: 11, color: '#15803D', fontWeight: 500 }}>Your feedback was sent.</div>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                        <textarea
+                          value={feedback}
+                          onChange={(e) => setFeedback(e.target.value)}
+                          placeholder="What's on your mind?"
+                          style={{
+                            width: '100%',
+                            minHeight: 80,
+                            padding: '12px 14px',
+                            borderRadius: 16,
+                            border: '1px solid #E2E8F0',
+                            fontSize: 12.5,
+                            fontFamily: 'inherit',
+                            resize: 'none',
+                            outline: 'none',
+                            transition: 'all 0.2s ease',
+                            background: '#ffffff',
+                            color: '#0F172A',
+                            fontWeight: 500
+                          }}
+                          onFocus={(e) => {
+                            e.target.style.borderColor = '#f95700';
+                            e.target.style.boxShadow = '0 0 0 3px rgba(249, 87, 0, 0.08)';
+                          }}
+                          onBlur={(e) => {
+                            e.target.style.borderColor = '#E2E8F0';
+                            e.target.style.boxShadow = 'none';
+                          }}
+                        />
+                        <button
+                          onClick={handleFeedbackSubmit}
+                          disabled={!feedback.trim() || isSubmittingFeedback}
+                          style={{
+                            width: '100%',
+                            height: 40,
+                            borderRadius: 14,
+                            background: feedback.trim() ? '#f95700' : '#f1f5f9',
+                            color: feedback.trim() ? '#ffffff' : '#94a3b8',
+                            border: 'none',
+                            fontSize: 12,
+                            fontWeight: 700,
+                            cursor: feedback.trim() ? 'pointer' : 'default',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 8,
+                            transition: 'all 0.2s ease',
+                            boxShadow: feedback.trim() ? '0 4px 12px rgba(249, 87, 0, 0.2)' : 'none'
+                          }}
+                          onMouseEnter={(e) => {
+                            if (feedback.trim() && !isSubmittingFeedback) {
+                              e.currentTarget.style.transform = 'translateY(-1px)';
+                              e.currentTarget.style.background = '#e85000';
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (feedback.trim() && !isSubmittingFeedback) {
+                              e.currentTarget.style.transform = 'none';
+                              e.currentTarget.style.background = '#f95700';
+                            }
+                          }}
+                        >
+                          {isSubmittingFeedback ? (
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" style={{ animation: 'spin 2s linear infinite' }}>
+                              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+                            </svg>
+                          ) : (
+                            <>
+                              <MessageSquare size={14} /> Send Feedback
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  </div>
 
                   {/* FIX FOR ME PANEL */}
                   {isFixing && (
