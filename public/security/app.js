@@ -245,6 +245,24 @@ function initAuth() {
         return;
     }
 
+    // Check for auth errors in URL (handles identity linking conflicts)
+    const hash = window.location.hash || '';
+    if (hash.includes('error=')) {
+        const hashParams = new URLSearchParams(hash.substring(1));
+        const errorDesc = hashParams.get('error_description') || hashParams.get('error');
+        if (errorDesc) {
+            const rawMsg = decodeURIComponent(errorDesc.replace(/\+/g, ' '));
+            let finalMsg = "Auth Error: " + rawMsg;
+            if (rawMsg.toLowerCase().includes('already linked') || rawMsg.toLowerCase().includes('identity_already_linked')) {
+                finalMsg = "⚠️ This GitHub account is already connected to another CodeSafe user. Please disconnect it from your other account first.";
+            }
+            showToast(finalMsg, 5000); // Use notification style instead of browser alert
+            if (window.showErr) window.showErr(finalMsg);
+            // Clear error from hash
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+    }
+
     // Listen for auth state changes (handles OAuth redirects too)
     try {
         sb.auth.onAuthStateChange((event, session) => {
@@ -488,7 +506,7 @@ function updateNavForAuth() {
                     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
                         ${plans.map((plan, idx) => {
                 const planTier = plan.tier.toLowerCase();
-                const isCurrent = planTier === activeTier || (planTier === "starter" && activeTier === "free");
+                const isCurrent = planTier === activeTier;
                 const pct = Math.round((plan.checks / plan.totalChecks) * 100);
 
                 return `
@@ -870,25 +888,27 @@ async function handleGoogleAuth() {
         showAuthError('Auth service is loading. Please try again.');
         return;
     }
-
     showToast('Connecting to Google...');
+
+    // ✅ If already signed in, sign out first
+    // so we don't accidentally link a new Google account
+    // to the existing user instead of creating a new session
+    if (isUserAuthed) {
+        await sb.auth.signOut();
+        isUserAuthed = false;
+        currentUser = null;
+        githubProviderToken = null;
+    }
 
     const { data, error } = await sb.auth.signInWithOAuth({
         provider: 'google',
         options: {
             redirectTo: window.location.origin,
-            queryParams: {
-                prompt: 'select_account consent'
-            }
+            queryParams: { prompt: 'select_account consent' }
         }
     });
-
-    if (error) {
-        showAuthError(error.message);
-    }
-    // User will be redirected to Google, then back to redirectTo
+    if (error) showAuthError(error.message);
 }
-
 // ── Sign Out ────────────────────────────────── */
 async function handleSignOut() {
     const sb = getSupabase();
@@ -1045,16 +1065,62 @@ document.addEventListener('click', async (e) => {
         const sb = getSupabase();
         if (!sb) return;
         showErr('Connecting to GitHub...');
-        await sb.auth.signInWithOAuth({
-            provider: 'github',
-            options: {
-                scopes: 'repo',
-                redirectTo: window.location.origin + window.location.pathname,
-                queryParams: {
-                    prompt: 'consent'
-                }
+
+        if (isUserAuthed && currentUser) {
+            // Check if already linked to THIS user
+            const identities = currentUser.identities || [];
+            const alreadyLinked = identities.some(id => id.provider === 'github');
+
+            if (alreadyLinked) {
+                // If already linked, just use signInWithOAuth to refresh tokens/session
+                // linkIdentity often errors if the identity already exists for the same user
+                await sb.auth.signInWithOAuth({
+                    provider: 'github',
+                    options: {
+                        scopes: 'repo',
+                        redirectTo: window.location.origin + window.location.pathname,
+                    }
+                });
+                return;
             }
-        });
+
+            // Not yet linked — link GitHub to existing account
+            if (typeof sb.auth.linkIdentity !== 'function') {
+                showErr('Your Supabase client version is too old to support linking.');
+                return;
+            }
+            const { error } = await sb.auth.linkIdentity({
+                provider: 'github',
+                options: {
+                    scopes: 'repo',
+                    redirectTo: window.location.origin + window.location.pathname,
+                }
+            });
+            if (error) {
+                console.error("linkIdentity error:", error);
+                const msg = error.message || "Unknown error";
+                if (msg.includes('already linked')) {
+                    showToast("⚠️ This GitHub account is already connected to another user. Please disconnect it from your other account first.", 5000);
+                } else {
+                    showToast("GitHub linking failed: " + msg, 5000);
+                }
+                showErr("GitHub linking failed: " + msg);
+            }
+        } else {
+            // Not signed in — normal GitHub sign in
+            const { error } = await sb.auth.signInWithOAuth({
+                provider: 'github',
+                options: {
+                    scopes: 'repo',
+                    redirectTo: window.location.origin + window.location.pathname,
+                    queryParams: { prompt: 'consent' }
+                }
+            });
+            if (error) {
+                console.error("signInWithOAuth error:", error);
+                showErr("GitHub sign in failed: " + error.message);
+            }
+        }
         return;
     }
 
@@ -1062,7 +1128,24 @@ document.addEventListener('click', async (e) => {
     if (disBtn) {
         e.preventDefault();
         const sb = getSupabase();
-        if (sb) sb.auth.signOut();
+        if (sb) {
+            // ✅ Only unlink GitHub identity, don't sign the user out entirely
+            const identities = currentUser?.identities || [];
+            const githubIdentity = identities.find(i => i.provider === 'github');
+            if (githubIdentity) {
+                const { error } = await sb.auth.unlinkIdentity(githubIdentity);
+                if (!error) {
+                    githubProviderToken = null;
+                    localStorage.removeItem(`github_token_${currentUser?.id}`);
+                    updateGithubUI();
+                    showToast('✓ GitHub disconnected');
+                } else {
+                    showToast('Error disconnecting: ' + error.message);
+                }
+            } else {
+                showToast('No GitHub account connected');
+            }
+        }
         return;
     }
 
@@ -1211,11 +1294,46 @@ document.addEventListener('click', e => {
 });
 
 /* ═══ FILE HANDLING ══════════════════════════ */
-document.addEventListener('click', e => {
+async function getFilesFromDirHandle(dirHandle, basePath = '') {
+    const files = [];
+    for await (const [name, handle] of dirHandle.entries()) {
+        const path = basePath ? `${basePath}/${name}` : name;
+        if (handle.kind === 'directory') {
+            if (!CONFIG.SKIP_DIRECTORIES.has(name)) {
+                files.push(...await getFilesFromDirHandle(handle, path));
+            }
+        } else if (handle.kind === 'file') {
+            const ext = name.split('.').pop().toLowerCase();
+            if (CONFIG.CODE_EXTENSIONS.has(ext)) {
+                const file = await handle.getFile();
+                Object.defineProperty(file, '_relPath', { value: path, writable: false });
+                files.push(file);
+            }
+        }
+    }
+    return files;
+}
+
+document.addEventListener('click', async e => {
     const uz = e.target.closest('#uploadZone');
     if (uz) {
-        const fi = $('fileInput');
-        if (fi) fi.click();
+        if ('showDirectoryPicker' in window) {
+            try {
+                const dirHandle = await window.showDirectoryPicker();
+                showErr('Scanning folder structure quickly...');
+                const files = await getFilesFromDirHandle(dirHandle);
+                hideErr();
+                handleFiles(files, dirHandle.name || 'Project');
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.error(err);
+                    showErr('Could not read folder. ' + err.message);
+                }
+            }
+        } else {
+            const fi = $('fileInput');
+            if (fi) fi.click();
+        }
     }
 });
 

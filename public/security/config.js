@@ -171,7 +171,7 @@ const PLAN_LIMITS = {
     free: {
         scansPerMonth: 1,
         maxCodeMB: 50,
-        label: 'Starter',
+        label: 'Free Trial',
         // 20 checks: most visible, most beginner-critical
         checkNumbers: [
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10,    // P0+P1 core

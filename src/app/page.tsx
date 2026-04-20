@@ -48,7 +48,7 @@ function CheckoutAlert() {
         }
         .toast-close-btn:hover { background: rgba(15, 23, 42, 0.05); color: #0f172a; }
       `}</style>
-      
+
       {isSuccess && (
         <>
           <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--success-dim)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -104,10 +104,10 @@ export default function SecurityPage() {
   const getTierInfo = () => {
     const tier = currentUserPlan?.plan_tier || 'free';
     const limitInfo = (PLAN_LIMITS as any)[tier] || PLAN_LIMITS.free;
-    
+
     // Find the matching entry in PRICING_DATA for display labels
     const data = PRICING_DATA.find(p => p.tier.toLowerCase() === limitInfo.label.toLowerCase()) || PRICING_DATA[0];
-    
+
     return {
       label: `${limitInfo.label} Plan`,
       checks: `${data.checks}/${TOTAL_CHECKS}`,
@@ -1336,8 +1336,8 @@ export default function SecurityPage() {
       <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
       <script dangerouslySetInnerHTML={{
         __html: `
-        window.SUPABASE_URL = 'https://gzjqjsutxqtwbvcubtgj.supabase.co';
-        window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6anFqc3V0eHF0d2J2Y3VidGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMzE1MDEsImV4cCI6MjA4ODkwNzUwMX0.Y_HSmMmFQrrOaRrUfUML23S0MDt5lsfqFul6jSeNu1E';
+        window.SUPABASE_URL = '${process.env.NEXT_PUBLIC_SUPABASE_URL}';
+        window.SUPABASE_ANON_KEY = '${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}';
         try {
           const keys = Object.keys(window.localStorage);
           const hasAuth = keys.some(k => k.startsWith('sb-') && k.endsWith('-auth-token') && JSON.parse(window.localStorage.getItem(k))?.access_token);
@@ -1436,7 +1436,8 @@ export default function SecurityPage() {
                 <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '12px', height: '12px', marginRight: '6px' }}>
                   <span style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'currentColor', borderRadius: '50%', animation: 'badgePulse 2s cubic-bezier(0, 0, 0.2, 1) infinite' }}></span>
                   <span style={{ position: 'relative', display: 'inline-block', width: '6px', height: '6px', backgroundColor: 'currentColor', borderRadius: '50%' }}></span>
-                  <style dangerouslySetInnerHTML={{ __html: `
+                  <style dangerouslySetInnerHTML={{
+                    __html: `
                     @keyframes badgePulse {
                       0% { transform: scale(0.8); opacity: 0.8; }
                       100% { transform: scale(2.4); opacity: 0; }

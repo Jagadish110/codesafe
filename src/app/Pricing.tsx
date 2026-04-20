@@ -63,7 +63,7 @@ export const PLAN_LIMITS = {
   free: {
     scansPerMonth: 1,
     maxCodeMB: 50,
-    label: 'Starter',
+    label: 'Free Trial',
     color: '#6366f1',
     checkNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 18, 19, 22, 23, 25, 26, 27, 28, 35],
   },
@@ -93,13 +93,7 @@ export const PLAN_LIMITS = {
     color: '#f59e0b',
     checkNumbers: 'all',
   },
-  test: {
-    scansPerMonth: 1,
-    maxCodeMB: 1,
-    label: 'Test',
-    color: '#ef4444',
-    checkNumbers: [1, 2, 3, 4, 5],
-  },
+
 };
 
 export default function Pricing() {
