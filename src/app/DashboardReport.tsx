@@ -604,10 +604,10 @@ const DashboardReport: React.FC = () => {
   const handleFeedbackSubmit = async () => {
     if (!feedback.trim()) return;
     setIsSubmittingFeedback(true);
-    
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       const { error } = await supabase
         .from('user_feedback')
         .insert([{
@@ -813,10 +813,10 @@ const DashboardReport: React.FC = () => {
             if (!pf) return v;
             return {
               ...v,
-              confidence:    pf.confidence    ?? v.confidence,
-              confirmed_by:  pf.confirmed_by  ?? v.confirmed_by,
+              confidence: pf.confidence ?? v.confidence,
+              confirmed_by: pf.confirmed_by ?? v.confirmed_by,
               agent_agreement: pf.agent_agreement ?? v.agent_agreement,
-              needs_review:  pf.needs_review  ?? v.needs_review,
+              needs_review: pf.needs_review ?? v.needs_review,
             };
           });
           return { ...prev, vulnerabilities: enriched };
@@ -2109,10 +2109,10 @@ const DashboardReport: React.FC = () => {
                                     {/* Agent agreement row */}
                                     {(() => {
                                       const agentColors: Record<string, { bg: string; text: string; border: string }> = {
-                                        sleuth:   { bg: '#EFF6FF', text: '#1D4ED8', border: '#BFDBFE' },
+                                        sleuth: { bg: '#EFF6FF', text: '#1D4ED8', border: '#BFDBFE' },
                                         guardian: { bg: '#F5F3FF', text: '#6D28D9', border: '#DDD6FE' },
-                                        hacker:   { bg: '#FFF1F2', text: '#BE123C', border: '#FECDD3' },
-                                        auditor:  { bg: '#FFF7ED', text: '#C2410C', border: '#FED7AA' },
+                                        hacker: { bg: '#FFF1F2', text: '#BE123C', border: '#FECDD3' },
+                                        auditor: { bg: '#FFF7ED', text: '#C2410C', border: '#FED7AA' },
                                         sentinel: { bg: '#F0FDF4', text: '#166534', border: '#BBF7D0' },
                                         operator: { bg: '#FAFAFA', text: '#374151', border: '#E5E7EB' },
                                       };
@@ -2151,7 +2151,7 @@ const DashboardReport: React.FC = () => {
                                       fontSize: 10, fontWeight: 700, padding: '2px 7px',
                                       borderRadius: 100, fontFamily: 'monospace',
                                       background: v.confidence >= 90 ? '#ECFDF5' : v.confidence >= 75 ? '#FFFBEB' : '#FFF1F2',
-                                      color:      v.confidence >= 90 ? '#065F46' : v.confidence >= 75 ? '#92400E' : '#9F1239',
+                                      color: v.confidence >= 90 ? '#065F46' : v.confidence >= 75 ? '#92400E' : '#9F1239',
                                       border: `1px solid ${v.confidence >= 90 ? '#6EE7B7' : v.confidence >= 75 ? '#FDE68A' : '#FECDD3'}`,
                                     }}>
                                       {v.confidence}%
@@ -2431,7 +2431,7 @@ const DashboardReport: React.FC = () => {
                       </div>
                       <span style={{ fontSize: 14, fontWeight: 800, color: '#0F172A', letterSpacing: '-0.2px' }}>Improve CodeSafe</span>
                     </div>
-                    
+
                     <p style={{ fontSize: 11.5, color: '#64748B', marginBottom: 14, lineHeight: 1.5, fontWeight: 500 }}>
                       Spotted a bug or have an idea? Help us build the future of AI security.
                     </p>

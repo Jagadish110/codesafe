@@ -749,10 +749,14 @@ export default function SecurityPage() {
         }
 
         .logo-img {
-            width: 28px !important;
-            height: 28px !important;
+            width: 32px !important;
+            height: 32px !important;
             object-fit: contain !important;
-            border-radius: 6px !important;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        .nav-logo:hover .logo-img {
+            transform: scale(1.1) rotate(-5deg) !important;
         }
 
         .logo-pip { display: none !important; }

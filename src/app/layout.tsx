@@ -4,6 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "CodeSafe — Security Scanner for Founders",
   description: "Scan your website code for security vulnerabilities before you launch. Plain English report, no technical knowledge needed.",
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
