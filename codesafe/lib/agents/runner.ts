@@ -287,7 +287,7 @@ async function callGemini(
 // All agents share one model defined by GEMINI_MODEL in .env.
 // Falls back to gemini-2.0-flash if the env var is not set.
 
-const GEMINI_FALLBACK_MODEL = "gemini-2.0-flash";
+const GEMINI_FALLBACK_MODEL = "gemini-3-pro-preview";
 
 export async function runAgent(
   agentId: AgentId,

@@ -1326,10 +1326,20 @@ RULES:
 
         const apiTools = tools.map(({ name, description, input_schema }) => ({ name, description, input_schema }));
 
+        let token = '';
+        if (typeof window !== 'undefined' && typeof window.getSupabase === 'function') {
+            const sb = window.getSupabase();
+            if (sb) {
+                const { data } = await sb.auth.getSession();
+                token = data?.session?.access_token || '';
+            }
+        }
+
         const response = await fetch('/api/scan', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
                 provider: 'anthropic',
@@ -1374,9 +1384,21 @@ RULES:
             }))
         }];
 
+        let token = '';
+        if (typeof window !== 'undefined' && typeof window.getSupabase === 'function') {
+            const sb = window.getSupabase();
+            if (sb) {
+                const { data } = await sb.auth.getSession();
+                token = data?.session?.access_token || '';
+            }
+        }
+
         const response = await fetch('/api/scan', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify({
                 provider: 'google',
                 // Removing endpoint from here so the backend dynamically fetches it from process.env.GEMINI_MODEL (.env.local)

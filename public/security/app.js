@@ -1754,6 +1754,13 @@ function addStep(text, cls = '') {
 
 /* ═══ AI API HELPER ══════════════════════════ */
 async function callAI({ messages, systemPrompt = '', maxTokens = CONFIG.SCAN_MAX_TOKENS }) {
+    const sb = getSupabase();
+    let token = '';
+    if (sb) {
+        const { data } = await sb.auth.getSession();
+        token = data?.session?.access_token || '';
+    }
+
     if (CONFIG.ACTIVE_PROVIDER === 'google') {
         const contents = [];
         if (systemPrompt) {
@@ -1766,7 +1773,10 @@ async function callAI({ messages, systemPrompt = '', maxTokens = CONFIG.SCAN_MAX
 
         const res = await fetch('/api/scan', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify({
                 provider: 'google',
                 endpoint: `models/${CONFIG.GOOGLE_MODEL}:generateContent`,
@@ -1791,7 +1801,10 @@ async function callAI({ messages, systemPrompt = '', maxTokens = CONFIG.SCAN_MAX
 
         const res = await fetch('/api/scan', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify({
                 provider: 'anthropic',
                 payload: body
