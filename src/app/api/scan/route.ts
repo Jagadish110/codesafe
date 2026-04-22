@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
 
   // ── Branch A: multipart/form-data → multi-agent pipeline ──────────────────
   if (contentType.includes("multipart/form-data")) {
-    return handlePipeline(req, user as { id: string; [key: string]: unknown });
+    return handlePipeline(req, user as unknown as { id: string });
   }
 
   // ── Branch B: application/json → Gemini proxy ─────────────────────────────
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Branch A — Multi-agent pipeline (FormData file upload)
 // ─────────────────────────────────────────────────────────────────────────────
-async function handlePipeline(req: NextRequest, user: { id: string; [key: string]: unknown }) {
+async function handlePipeline(req: NextRequest, user: { id: string }) {
 
   let formData: FormData;
   try {
