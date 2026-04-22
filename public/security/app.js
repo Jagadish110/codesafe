@@ -1136,7 +1136,7 @@ document.addEventListener('click', async (e) => {
                 const { error } = await sb.auth.unlinkIdentity(githubIdentity);
                 if (!error) {
                     githubProviderToken = null;
-                    localStorage.removeItem(`github_token_${currentUser?.id}`);
+                    localStorage.removeItem('github_token');
                     updateGithubUI();
                     showToast('✓ GitHub disconnected');
                 } else {

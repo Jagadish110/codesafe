@@ -9,7 +9,23 @@ const client = new DodoPayments({
 
 export async function POST(req: NextRequest) {
   try {
-    const { tier, accessToken } = await req.json();
+    const body = await req.json();
+    const { tier, accessToken } = body;
+
+    // Input validation — only allow known pricing tiers
+    const ALLOWED_TIERS = ['test', 'starter', 'pro', 'plus'];
+    if (!tier || typeof tier !== 'string' || !ALLOWED_TIERS.includes(tier.toLowerCase())) {
+      return NextResponse.json(
+        { error: 'Invalid pricing tier. Allowed values: starter, pro, plus.' },
+        { status: 400 }
+      );
+    }
+    if (accessToken && typeof accessToken !== 'string') {
+      return NextResponse.json(
+        { error: 'Invalid request format.' },
+        { status: 400 }
+      );
+    }
 
     // ✅ Accept access token from the request body (sent by client-side Supabase CDN auth)
     //    This fixes the 401 issue caused by the CDN client storing tokens in localStorage
@@ -43,8 +59,9 @@ export async function POST(req: NextRequest) {
 
     const productId = PRODUCT_MAP[tierKey];
     if (!productId) {
+      console.error(`Product ID not configured for tier: ${tierKey}`);
       return NextResponse.json({
-        error: `Pricing tier "${tier}" is not configured. Check your DODO_*_PRODUCT_ID env vars.`
+        error: 'This pricing tier is currently unavailable. Please contact support.'
       }, { status: 400 });
     }
 
@@ -63,10 +80,10 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ checkoutUrl: session.checkout_url });
 
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Checkout error:', err);
     return NextResponse.json({
-      error: err.message || 'Failed to initialize payment session'
+      error: 'An unexpected error occurred. Please try again later.'
     }, { status: 500 });
   }
 }

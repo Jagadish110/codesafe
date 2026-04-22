@@ -1506,16 +1506,11 @@ export default function SecurityPage() {
                 </div>
 
                 <div className="tool-badge">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 4L19 18H5L12 4Z" fill="url(#antV_gradient)" />
-                    <defs>
-                      <linearGradient id="antV_gradient" x1="5" y1="4" x2="19" y2="18" gradientUnits="userSpaceOnUse">
-                        <stop stopColor="#F87171" />
-                        <stop offset="0.5" stopColor="#818CF8" />
-                        <stop offset="1" stopColor="#34D399" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
+                  <img
+                    src="/antigravity-icon.png"
+                    alt="Antigravity"
+                    style={{ width: '20px', height: '20px', objectFit: 'cover', borderRadius: '4px' }}
+                  />
                   Antigravity
                 </div>
 

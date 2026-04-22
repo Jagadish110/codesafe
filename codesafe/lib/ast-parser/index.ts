@@ -289,7 +289,10 @@ export async function runASTParser(files: RawFile[]): Promise<ASTParserResult> {
 // Walk all nodes in the AST tree — DFS traversal
 export function walkTree(node: Parser.SyntaxNode): Parser.SyntaxNode[] {
     const result: Parser.SyntaxNode[] = [node]
-    for (const child of node.children) {
+    // Guard: node.children can be undefined on some tree-sitter grammar quirks (.mjs, .cjs)
+    const children = node.children ?? []
+    for (const child of children) {
+        if (!child) continue
         const childNodes = walkTree(child)
         for (let i = 0; i < childNodes.length; i++) {
             result.push(childNodes[i])

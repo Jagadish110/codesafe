@@ -106,14 +106,26 @@ function parseFindings(
   try {
     parsed = JSON.parse(cleaned);
   } catch {
-    // Try to extract JSON from the response
-    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
+    // Fallback 1: extract outermost { ... } object
+    const objMatch = cleaned.match(/\{[\s\S]*\}/);
+    if (objMatch) {
       try {
-        parsed = JSON.parse(jsonMatch[0]);
+        parsed = JSON.parse(objMatch[0]);
       } catch {
-        console.error(`[Agent ${agentId}] Could not parse JSON output`);
-        return [];
+        // Fallback 2: handle array-wrapped response [{...}]
+        const arrMatch = cleaned.match(/\[[\s\S]*\]/);
+        if (arrMatch) {
+          try {
+            const arr = JSON.parse(arrMatch[0]);
+            parsed = { findings: Array.isArray(arr) ? arr : [] };
+          } catch {
+            console.error(`[Agent ${agentId}] Could not parse JSON output`);
+            return [];
+          }
+        } else {
+          console.error(`[Agent ${agentId}] Could not parse JSON output`);
+          return [];
+        }
       }
     } else {
       console.error(`[Agent ${agentId}] No JSON found in output`);
@@ -249,6 +261,8 @@ async function callGemini(
       generationConfig: {
         maxOutputTokens: 4096,
         temperature: 0.1,
+        // Force JSON output — eliminates "No JSON found in output" errors
+        responseMimeType: "application/json",
       },
     }),
   });

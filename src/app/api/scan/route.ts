@@ -32,22 +32,7 @@ async function getUserFromToken(token: string) {
 // POST /api/scan
 // ─────────────────────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
-  const contentType = req.headers.get("content-type") ?? "";
-
-  // ── Branch A: multipart/form-data → multi-agent pipeline ──────────────────
-  if (contentType.includes("multipart/form-data")) {
-    return handlePipeline(req);
-  }
-
-  // ── Branch B: application/json → Gemini proxy ─────────────────────────────
-  return handleGemini(req);
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Branch A — Multi-agent pipeline (FormData file upload)
-// ─────────────────────────────────────────────────────────────────────────────
-async function handlePipeline(req: NextRequest) {
-  // Auth — pipeline requires a valid Supabase session
+  // ── Auth — all branches require a valid Supabase session ──────────────────
   const authHeader = req.headers.get("authorization") ?? "";
   const token = authHeader.replace(/^Bearer\s+/i, "");
   if (!token) {
@@ -59,6 +44,22 @@ async function handlePipeline(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const contentType = req.headers.get("content-type") ?? "";
+
+  // ── Branch A: multipart/form-data → multi-agent pipeline ──────────────────
+  if (contentType.includes("multipart/form-data")) {
+    return handlePipeline(req, user);
+  }
+
+  // ── Branch B: application/json → Gemini proxy ─────────────────────────────
+  return handleGemini(req);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Branch A — Multi-agent pipeline (FormData file upload)
+// ─────────────────────────────────────────────────────────────────────────────
+async function handlePipeline(req: NextRequest, user: { id: string; [key: string]: unknown }) {
+
   let formData: FormData;
   try {
     formData = await req.formData();
@@ -66,7 +67,15 @@ async function handlePipeline(req: NextRequest) {
     return NextResponse.json({ error: "Invalid form data" }, { status: 400 });
   }
 
-  const scanType = (formData.get("scanType") as string) ?? "web";
+  const VALID_SCAN_TYPES = ['web', 'mobile', 'api', 'infra'] as const;
+  type ScanType = typeof VALID_SCAN_TYPES[number];
+
+  const rawScanType = (formData.get("scanType") as string) ?? "web";
+  if (!VALID_SCAN_TYPES.includes(rawScanType as ScanType)) {
+    return NextResponse.json({ error: "Invalid scan type" }, { status: 400 });
+  }
+  const scanType = rawScanType as ScanType;
+
   const rawFiles = formData.getAll("files") as File[];
 
   if (!rawFiles.length) {
@@ -146,8 +155,9 @@ async function handlePipeline(req: NextRequest) {
 async function handleGemini(req: NextRequest) {
   const apiKey = process.env.GOOGLE_API_KEY;
   if (!apiKey) {
+    console.error("GOOGLE_API_KEY is not configured");
     return NextResponse.json(
-      { error: "GOOGLE_API_KEY is not configured on the server" },
+      { error: "AI service is temporarily unavailable. Please try again later." },
       { status: 500 }
     );
   }
@@ -184,9 +194,10 @@ async function handleGemini(req: NextRequest) {
       body: JSON.stringify(body.payload ?? {}),
       signal: AbortSignal.timeout(120000) // 120 second timeout
     } as RequestInit);
-  } catch (err: any) {
+  } catch (err: unknown) {
+    console.error("Gemini API error:", err);
     return NextResponse.json(
-      { error: `Failed to reach Gemini API: ${err?.message}` },
+      { error: "Failed to reach AI service. Please try again later." },
       { status: 502 }
     );
   }
