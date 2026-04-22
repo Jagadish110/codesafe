@@ -117,7 +117,7 @@ function parseFindings(
         if (arrMatch) {
           try {
             const arr = JSON.parse(arrMatch[0]);
-            parsed = { findings: Array.isArray(arr) ? arr : [] };
+            parsed = { agent: agentId, findings: Array.isArray(arr) ? arr : [] };
           } catch {
             console.error(`[Agent ${agentId}] Could not parse JSON output`);
             return [];
