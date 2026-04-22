@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
 
   // ── Branch A: multipart/form-data → multi-agent pipeline ──────────────────
   if (contentType.includes("multipart/form-data")) {
-    return handlePipeline(req, user);
+    return handlePipeline(req, user as { id: string; [key: string]: unknown });
   }
 
   // ── Branch B: application/json → Gemini proxy ─────────────────────────────
