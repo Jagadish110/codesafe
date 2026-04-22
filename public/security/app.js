@@ -1277,14 +1277,26 @@ async function fetchGithub() {
 
         let code = `Project: ${owner}/${cleanRepo} (GitHub)\nBusiness type: ${bizType}\n`;
         let fetched = 0;
-        for (const f of files.slice(0, 40)) {
-            if (code.length > 75000) break;
+        
+        const fetchPromises = files.slice(0, 40).map(async (f) => {
             try {
                 const br = await fetch(`https://api.github.com/repos/${owner}/${cleanRepo}/contents/${f.path}`, { headers });
                 const bd = await br.json();
                 const txt = atob((bd.content || '').replace(/\n/g, ''));
-                if (txt.trim()) { code += `\n\n### FILE: ${f.path}\n${txt.slice(0, 4000)}`; fetched++; }
-            } catch (e) { }
+                return { path: f.path, content: txt };
+            } catch (e) {
+                return null;
+            }
+        });
+
+        const results = await Promise.all(fetchPromises);
+        
+        for (const res of results) {
+            if (code.length > 75000) break;
+            if (res && res.content.trim()) {
+                code += `\n\n### FILE: ${res.path}\n${res.content.slice(0, 4000)}`;
+                fetched++;
+            }
         }
         hideErr(); codeSnapshot = code; folderName = `${owner}/${cleanRepo}`;
         folderFiles = files; // Ensure folderFiles is populated for accurate stats
