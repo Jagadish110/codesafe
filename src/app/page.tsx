@@ -2556,6 +2556,7 @@ export default function SecurityPage() {
               s.onload = function() { loadSeq(scripts, i + 1); };
               document.body.appendChild(s);
             })([
+              'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js',
               '/security/config.js?v=3',
               '/security/UsageTracker.js?v=3',
               '/security/Tool.js?v=3',

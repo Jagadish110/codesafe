@@ -22,6 +22,21 @@ function getSupabase() {
     return sbClient;
 }
 
+// Wait for the Supabase CDN library to finish loading (polls up to 5s)
+function waitForSupabase() {
+    return new Promise(function (resolve) {
+        var sb = getSupabase();
+        if (sb) return resolve(sb);
+        var attempts = 0;
+        var timer = setInterval(function () {
+            sb = getSupabase();
+            attempts++;
+            if (sb) { clearInterval(timer); resolve(sb); }
+            else if (attempts >= 50) { clearInterval(timer); resolve(null); }
+        }, 100);
+    });
+}
+
 // ── Auth State ──────────────────────────────── */
 let isUserAuthed = false;
 let currentAuthMode = 'signup';
@@ -298,6 +313,14 @@ function initAuth() {
         sb.auth.getSession().then(({ data, error }) => {
             if (error) {
                 console.warn('Supabase auth check error:', error.message || error);
+                if (error.name === 'AuthApiError' || (error.message && error.message.includes('Refresh Token'))) {
+                    console.log('Clearing stale auth tokens...');
+                    Object.keys(localStorage).forEach(key => {
+                        if (key.startsWith('sb-')) {
+                            localStorage.removeItem(key);
+                        }
+                    });
+                }
                 return;
             }
             if (data && data.session) {
@@ -742,9 +765,10 @@ function showAuthError(msg, isInfo = false) {
 
 // ── Email/Password Auth ─────────────────────── */
 async function handleEmailAuth() {
-    const sb = getSupabase();
+    showAuthError('Connecting...', true);
+    const sb = await waitForSupabase();
     if (!sb) {
-        showAuthError('Auth service is loading. Please try again.');
+        showAuthError('Auth service unavailable. Please refresh the page.');
         return;
     }
     const emailInput = document.querySelector('.auth-form input[type="email"]');
@@ -883,9 +907,10 @@ async function handleResendEmail(passedEmail) {
 
 // ── Google OAuth ────────────────────────────── */
 async function handleGoogleAuth() {
-    const sb = getSupabase();
+    showAuthError('Connecting...', true);
+    const sb = await waitForSupabase();
     if (!sb) {
-        showAuthError('Auth service is loading. Please try again.');
+        showAuthError('Auth service unavailable. Please refresh the page.');
         return;
     }
     showToast('Connecting to Google...');
