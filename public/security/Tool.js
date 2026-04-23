@@ -1371,7 +1371,7 @@ RULES:
     },
 
 
-    async runScanGemini(apiKey, model = 'gemini-3-flash-preview', bizType, detectedStack, codeString, planTier = 'plus') {
+    async runScanGemini(apiKey, model = 'gemini-2.5-flash-lite', bizType, detectedStack, codeString, planTier = 'plus') {
         const tools = TOOLS.buildScanTools(detectedStack, codeString, planTier);
         const { system, user } = TOOLS.buildScanMessages(bizType, detectedStack, codeString, planTier);
 
@@ -1395,7 +1395,7 @@ RULES:
 
         const response = await fetch('/api/scan', {
             method: 'POST',
-            headers: { 
+            headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },

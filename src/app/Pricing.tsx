@@ -62,7 +62,7 @@ export const PRICING_DATA = [
 export const PLAN_LIMITS = {
   free: {
     scansPerMonth: 1,
-    maxCodeMB: 50,
+    maxCodeMB: 1,
     label: 'Free Trial',
     color: '#6366f1',
     checkNumbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 17, 18, 19, 22, 23, 25, 26, 27, 28, 35],

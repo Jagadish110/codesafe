@@ -1463,10 +1463,70 @@ function handleFiles(files, name) {
     const totalBytes = filtered.reduce((sum, f) => sum + (f.size || 0), 0);
     const totalMB = totalBytes / (1024 * 1024);
 
+    // Remove any previous size-limit warning
+    const prevSizeWarn = document.getElementById('fileSizeLimitWarn');
+    if (prevSizeWarn) prevSizeWarn.remove();
+
     if (totalMB > maxMB) {
-        const tierLabel = tier === 'plus' ? 'Plus' : tier === 'pro' ? 'Pro' : 'Free';
-        showErr(`⚠️ Project size ${totalMB.toFixed(1)}MB exceeds your ${tierLabel} plan limit of ${maxMB}MB. Please upgrade or select fewer files.`);
-        setTimeout(() => { if (window.showPricingModal) window.showPricingModal(); }, 1800);
+        // Still show the file info so user knows what they uploaded
+        folderFiles = filtered; folderName = name;
+        const fName = $('fName'), fSizeEl = $('fSize'), fileRow = $('fileRow'), uploadZone = $('uploadZone'), scanBtn = $('scanBtn');
+        if (fName) fName.textContent = `📁 ${name}`;
+        if (fSizeEl) fSizeEl.textContent = `${filtered.length} files · ${totalMB < 1 ? (totalBytes / 1024).toFixed(0) + 'KB' : totalMB.toFixed(1) + 'MB'}`;
+        if (fileRow) fileRow.style.display = 'flex';
+        if (uploadZone) uploadZone.style.display = 'none';
+
+        // Keep scan button DISABLED
+        if (scanBtn) {
+            scanBtn.disabled = true;
+            scanBtn.classList.add('show');
+        }
+
+        // Show prominent upgrade warning banner
+        const tierLabel = tier === 'plus' ? 'Plus' : tier === 'pro' ? 'Pro' : tier === 'starter' ? 'Starter' : 'Free Trial';
+        const warn = document.createElement('div');
+        warn.id = 'fileSizeLimitWarn';
+        warn.style.cssText = [
+            'display:flex', 'align-items:flex-start', 'gap:12px',
+            'background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(248,113,113,0.05))',
+            'border:1.5px solid rgba(239,68,68,0.35)', 'border-radius:16px',
+            'padding:16px 18px', 'margin-top:12px',
+            'font-family:Inter,sans-serif', 'font-size:13px', 'line-height:1.6',
+            'color:#991b1b', 'animation:fadeIn 0.35s ease',
+            'max-width:100%', 'box-sizing:border-box'
+        ].join(';');
+
+        warn.innerHTML = `
+            <span style="font-size:22px;flex-shrink:0;margin-top:1px;">🚫</span>
+            <div style="flex:1;">
+                <strong style="display:block;font-size:14px;color:#7f1d1d;margin-bottom:4px;">
+                    File size exceeds ${tierLabel} limit
+                </strong>
+                Your uploaded project is <strong>${totalMB.toFixed(1)} MB</strong>, but the ${tierLabel} plan
+                allows a maximum of <strong>${maxMB} MB</strong>.
+                <br/>
+                <span style="font-weight:600;color:#dc2626;">
+                    Please upgrade your plan or upload a smaller project to scan.
+                </span>
+                <div style="margin-top:10px;">
+                    <button onclick="document.getElementById('fileSizeLimitWarn')?.remove(); window.showPricingModal ? window.showPricingModal(false) : document.getElementById('pricing')?.scrollIntoView({behavior:'smooth'});"
+                        style="background:#ef4444;color:#fff;border:none;border-radius:99px;padding:8px 22px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 12px rgba(239,68,68,0.2);">
+                        Upgrade Plan →
+                    </button>
+                    <button onclick="document.getElementById('fileSizeLimitWarn')?.remove();window.clearProjectData?.();"
+                        style="background:transparent;color:#64748b;border:1px solid #e2e8f0;border-radius:99px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;margin-left:8px;">
+                        Remove Files
+                    </button>
+                </div>
+            </div>
+        `;
+
+        // Insert warning after the fileRow
+        const fileRow2 = $('fileRow');
+        if (fileRow2 && fileRow2.parentNode) {
+            fileRow2.parentNode.insertBefore(warn, fileRow2.nextSibling);
+        }
+
         return;
     }
 
@@ -1629,6 +1689,9 @@ function clearFiles() {
     // Also remove the large-file-count performance warning if present
     const largeWarn = document.getElementById('largeFileCountWarn');
     if (largeWarn) largeWarn.remove();
+    // Also remove the file-size-limit warning if present
+    const sizeWarn = document.getElementById('fileSizeLimitWarn');
+    if (sizeWarn) sizeWarn.remove();
     if (uploadZone) uploadZone.style.display = 'block';
     if (scanBtn) {
         scanBtn.disabled = true;
@@ -1842,6 +1905,19 @@ window.performCodeSafeScan = async () => {
     if (currentMismatchError) {
         showErr(currentMismatchError);
         return;
+    }
+
+    // ── Defense-in-depth: re-check file size limit before scanning ──────────
+    if (folderFiles.length) {
+        const tier = currentUserPlan?.plan_tier || 'free';
+        const planLimit = PLAN_LIMITS[tier] || PLAN_LIMITS['free'];
+        const maxMB = planLimit.maxCodeMB;
+        const totalBytes = folderFiles.reduce((sum, f) => sum + (f.size || 0), 0);
+        const totalMB = totalBytes / (1024 * 1024);
+        if (totalMB > maxMB) {
+            showErr(`⚠️ Project size ${totalMB.toFixed(1)} MB exceeds your plan limit of ${maxMB} MB. Please upgrade or upload a smaller project.`);
+            return;
+        }
     }
 
     // Check limits

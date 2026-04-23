@@ -170,7 +170,7 @@ const CONFIG = {
 const PLAN_LIMITS = {
     free: {
         scansPerMonth: 1,
-        maxCodeMB: 50,
+        maxCodeMB: 1,
         label: 'Free Trial',
         // 20 checks: most visible, most beginner-critical
         checkNumbers: [

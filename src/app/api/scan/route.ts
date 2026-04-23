@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
 // Branch A — Multi-agent pipeline (FormData file upload)
 // ─────────────────────────────────────────────────────────────────────────────
 async function handlePipeline(req: NextRequest, user: { id: string }) {
-
+  const sb = getSupabase();
   let formData: FormData;
   try {
     formData = await req.formData();
@@ -82,6 +82,39 @@ async function handlePipeline(req: NextRequest, user: { id: string }) {
     return NextResponse.json({ error: "No files uploaded" }, { status: 400 });
   }
 
+  // ── Server-side file size limit enforcement ────────────────────────────────
+  // Lookup user's plan tier and enforce MB cap to protect against costly API usage
+  const TIER_MAX_MB: Record<string, number> = {
+    free: 1,
+    starter: 50,
+    pro: 2048,
+    plus: 5120,
+  };
+
+  let userTier = "free";
+  if (sb) {
+    const { data: plan } = await sb
+      .from("user_plans")
+      .select("plan_tier")
+      .eq("user_id", user.id)
+      .single();
+    userTier = plan?.plan_tier || "free";
+  }
+
+  const maxBytes = (TIER_MAX_MB[userTier] ?? 2) * 1024 * 1024;
+  const totalUploadBytes = rawFiles.reduce((sum, f) => sum + f.size, 0);
+
+  if (totalUploadBytes > maxBytes) {
+    const totalMB = (totalUploadBytes / (1024 * 1024)).toFixed(1);
+    const limitMB = TIER_MAX_MB[userTier] ?? 2;
+    return NextResponse.json(
+      {
+        error: `Upload size (${totalMB} MB) exceeds your ${userTier === "free" ? "Free Trial" : userTier} plan limit of ${limitMB} MB. Please upgrade or upload a smaller project.`,
+      },
+      { status: 413 }
+    );
+  }
+
   // Convert browser File objects → FileContent records
   const files: FileContent[] = await Promise.all(
     rawFiles.map(async (f) => {
@@ -98,8 +131,6 @@ async function handlePipeline(req: NextRequest, user: { id: string }) {
   );
 
   const scanId = crypto.randomUUID();
-  const sb = getSupabase();
-
   // Persist initial scan_graphs row so the dashboard can poll progress
   if (sb) {
     await sb.from("scan_graphs").upsert({
