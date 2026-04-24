@@ -576,6 +576,51 @@ const CSS = `
     .cs-top { grid-template-columns: 1fr; }
     .cs-side { position: static !important; width: 100% !important; }
   }
+
+  @media (max-width: 768px) {
+    .dashboard-status-banner {
+      padding: 8px 16px !important;
+      gap: 12px !important;
+      border-radius: 20px !important;
+    }
+    .dashboard-status-banner .divider-v {
+      display: none !important;
+    }
+    .dashboard-status-banner > div:nth-child(n+4) {
+      display: none !important; /* Hide less critical stats on small mobile */
+    }
+    .cs-page {
+      padding: 16px !important;
+    }
+    .cs-card {
+      padding: 16px !important;
+    }
+    .cs-sev-grid {
+      grid-template-columns: 1fr 1fr !important;
+    }
+    .cs-stats {
+      grid-template-columns: 1fr 1fr !important;
+    }
+    .dashboard-nav-inner {
+      width: calc(100% - 24px) !important;
+      gap: 12px !important;
+    }
+    .dashboard-nav-wrapper {
+      padding: 8px 0 !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .dashboard-status-banner {
+      display: none !important; /* Hide full banner on very small screens, maybe show a pill later */
+    }
+    .cs-orch-title {
+        font-size: 36px !important;
+    }
+    .cs-orch-sub {
+        font-size: 14px !important;
+    }
+  }
 `;
 
 // ── Component ──────────────────────────────────────────────────────────────
@@ -1352,7 +1397,7 @@ const DashboardReport: React.FC = () => {
         {!isScanning && isVisible && reportData && (
           <div id="resSec">
             {/* STICKY HEADER CONTROLS - FULL WIDTH */}
-            <div style={{
+            <div className="dashboard-nav-wrapper" style={{
               position: 'sticky',
               top: 0,
               zIndex: 9999,
@@ -1365,7 +1410,7 @@ const DashboardReport: React.FC = () => {
               background: 'transparent',
               pointerEvents: 'none'
             }}>
-              <div style={{
+              <div className="dashboard-nav-inner" style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',

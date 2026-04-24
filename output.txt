@@ -1,0 +1,196 @@
+POST /api/scan 200 in 70s (compile: 3.4s, proxy.ts: 37ms, render: 67s)
+ POST /api/scan 200 in 558ms (compile: 6ms, proxy.ts: 20ms, render: 532ms)
+[Graph] Building graph from 60 files
+[Graph] Sample file paths: [
+  'app/eslint.config.mjs',
+  'app/next.config.ts',
+  'app/next-env.d.ts',
+  'app/postcss.config.mjs',
+  'app/tsconfig.json'
+]
+[Graph] Files with imports: 36/60
+[Graph] Sample: app/eslint.config.mjs imports: [eslint/config, eslint-config-next/core-web-vitals, eslint-config-next/typescript]
+[Graph] Import resolution: 100 total, 48 external, 47 resolved, 1 fuzzy = 48 edges
+[Graph] Unresolved samples: [
+  'app/next-env.d.ts → ./.next/dev/types/routes.d.ts',
+  'app/test-sample.js → ./auth',
+  'app/test-sample.js → ./db',
+  'app/codesafe/lib/graph-builder/index.ts → ...'
+]
+[AST Bridge] Starting pipeline — 60 files
+[AST Parser] Starting — 60 files
+[AST Parser] app/eslint.config.mjs: Parse failed: Cannot read properties of undefined (reading 'length')
+[AST Parser] app/postcss.config.mjs: Parse failed: Cannot read properties of undefined (reading 'length')
+[AST Parser] app/tsconfig.json: Unknown file extension — skipped
+[AST Parser] app/package.json: Unknown file extension — skipped
+[AST Parser] app/package-lock.json: Unknown file extension — skipped        
+[AST Parser] app/jest.config.mjs: Parse failed: Cannot read properties of undefined (reading 'length')
+[AST Parser] app/stitch_reference.html: Unknown file extension — skipped    
+[AST Parser] app/scanner_reference.html: Unknown file extension — skipped   
+[AST Parser] app/report_reference.html: Unknown file extension — skipped    
+[AST Parser] app/test-sample.js: Parse failed: Cannot read properties of undefined (reading 'length')
+[AST Parser] app/codesafe_architecture_report.md: Unknown file extension — skipped
+[AST Parser] app/src/app/globals.css: Unknown file extension — skipped
+[AST Parser] app/src/app/layout.tsx: File has syntax errors — AST may be incomplete
+[AST Parser] app/src/app/DashboardReport.tsx: File has syntax errors — AST may be incomplete
+[AST Parser] app/src/app/legal/page.tsx: File has syntax errors — AST may be incomplete
+[AST Parser] app/public/security/config.js: Parse failed: Cannot read properties of undefined (reading 'length')
+[AST Parser] app/public/security/Tool.js: Parse failed: Cannot read properties of undefined (reading 'length')
+[AST Parser] app/public/security/prompts.js: Parse failed: Cannot read properties of undefined (reading 'length')
+[AST Parser] app/public/security/app.js: Parse failed: Cannot read properties of undefined (reading 'length')
+[AST Parser] app/public/security/styles.css: Unknown file extension — skipped
+[AST Parser] app/public/security/_new_screens.css: Unknown file extension — skipped
+[AST Parser] app/public/security/security-scope.css: Unknown file extension — skipped
+[AST Parser] app/public/security/stitch_design.html: Unknown file extension — skipped
+[AST Parser] app/public/security/report-dashboard.css: Unknown file extension — skipped
+[AST Parser] app/public/security/UsageTracker.js: Parse failed: Cannot read properties of undefined (reading 'length')
+[AST Parser] Done — 38/60 parsed successfully
+[AST Parser] By language: { javascript: 9, typescript: 31, unknown: 13, tsx:
+ 7 }
+[AST Bridge] Step 1 done — 38 / 60 files parsed
+[Function Extractor] Processing 60 files
+[Function Extractor] app/next.config.ts: 1 functions found
+[Function Extractor] app/codesafe/lib/pipeline.ts: 4 functions found
+[Function Extractor] app/codesafe/lib/ast-parser/index.ts: 13 functions found
+[Function Extractor] app/codesafe/lib/ast-parser/extractor.ts: 21 functions found
+[Function Extractor] app/codesafe/lib/ast-parser/call-extractor.ts: 20 functions found
+[Function Extractor] app/codesafe/lib/ast-parser/linker.ts: 32 functions found
+[Function Extractor] app/codesafe/lib/ast-parser/chain-detector.ts: 60 functions found
+[Function Extractor] app/codesafe/lib/ast-parser/bridge.ts: 5 functions found
+[Function Extractor] app/codesafe/lib/vibe-check/index.ts: 9 functions found
+[Function Extractor] app/codesafe/lib/aggregator/index.ts: 28 functions found
+[Function Extractor] app/codesafe/lib/agents/sleuth.ts: 1 functions found
+[Function Extractor] app/codesafe/lib/agents/guardian.ts: 1 functions found 
+[Function Extractor] app/codesafe/lib/agents/hacker.ts: 1 functions found   
+[Function Extractor] app/codesafe/lib/agents/auditor.ts: 1 functions found  
+[Function Extractor] app/codesafe/lib/agents/runner.ts: 18 functions found
+[Function Extractor] app/codesafe/lib/agents/sentinel.ts: 1 functions found 
+[Function Extractor] app/codesafe/lib/agents/operator.ts: 1 functions found 
+[Function Extractor] app/codesafe/lib/orchestrator/index.ts: 21 functions found
+[Function Extractor] app/codesafe/lib/graph-builder/index.ts: 35 functions found
+[Function Extractor] app/src/middleware.ts: 5 functions found
+[Function Extractor] app/src/hooks/useScan.ts: 20 functions found
+[Function Extractor] app/src/app/layout.tsx: 1 functions found
+[Function Extractor] app/src/app/page.tsx: 64 functions found
+[Function Extractor] app/src/app/DashboardReport.tsx: 125 functions found
+[Function Extractor] app/src/app/Pricing.tsx: 5 functions found
+[Function Extractor] app/src/app/RecentScans.tsx: 7 functions found
+[Function Extractor] app/src/app/OrchestrationProgress.tsx: 4 functions found
+[Function Extractor] app/src/app/legal/page.tsx: 4 functions found
+[Function Extractor] app/src/app/actions/graph.ts: 6 functions found
+[Function Extractor] app/src/app/api/webhooks/dodo/route.ts: 7 functions found
+[Function Extractor] app/src/app/api/checkout/route.ts: 1 functions found
+[Function Extractor] app/src/app/api/scan/route.ts: 11 functions found
+[Function Extractor] Done:
+  Total functions : 533
+  Entry points    : 26
+  Can return null : 28
+  No null check   : 301
+[AST Bridge] Step 2 done — 533 functions, 26 entry points
+[Call Extractor] Processing 60 files
+[Call Extractor] app/next.config.ts: 1 call sites found
+[Call Extractor] app/codesafe/lib/pipeline.ts: 19 call sites found
+[Call Extractor] app/codesafe/lib/ast-parser/index.ts: 18 call sites found
+[Call Extractor] app/codesafe/lib/ast-parser/extractor.ts: 46 call sites found
+[Call Extractor] app/codesafe/lib/ast-parser/call-extractor.ts: 37 call sites found
+[Call Extractor] app/codesafe/lib/ast-parser/linker.ts: 24 call sites found
+[Call Extractor] app/codesafe/lib/ast-parser/chain-detector.ts: 34 call sites found
+[Call Extractor] app/codesafe/lib/ast-parser/bridge.ts: 19 call sites found
+[Call Extractor] app/codesafe/lib/vibe-check/index.ts: 9 call sites found
+[Call Extractor] app/codesafe/lib/aggregator/index.ts: 64 call sites found
+[Call Extractor] app/codesafe/lib/agents/sleuth.ts: 1 call sites found
+[Call Extractor] app/codesafe/lib/agents/guardian.ts: 1 call sites found    
+[Call Extractor] app/codesafe/lib/agents/hacker.ts: 1 call sites found      
+[Call Extractor] app/codesafe/lib/agents/auditor.ts: 1 call sites found     
+[Call Extractor] app/codesafe/lib/agents/runner.ts: 28 call sites found     
+[Call Extractor] app/codesafe/lib/agents/sentinel.ts: 1 call sites found    
+[Call Extractor] app/codesafe/lib/agents/operator.ts: 1 call sites found    
+[Call Extractor] app/codesafe/lib/orchestrator/index.ts: 18 call sites found
+[Call Extractor] app/codesafe/lib/graph-builder/index.ts: 60 call sites found
+[Call Extractor] app/src/middleware.ts: 7 call sites found
+[Call Extractor] app/src/hooks/useScan.ts: 23 call sites found
+[Call Extractor] app/src/app/page.tsx: 81 call sites found
+[Call Extractor] app/src/app/DashboardReport.tsx: 162 call sites found
+[Call Extractor] app/src/app/Pricing.tsx: 12 call sites found
+[Call Extractor] app/src/app/RecentScans.tsx: 8 call sites found
+[Call Extractor] app/src/app/OrchestrationProgress.tsx: 7 call sites found  
+[Call Extractor] app/src/app/actions/graph.ts: 17 call sites found
+[Call Extractor] app/src/app/api/webhooks/dodo/route.ts: 57 call sites found
+[Call Extractor] app/src/app/api/checkout/route.ts: 10 call sites found
+[Call Extractor] app/src/app/api/scan/route.ts: 43 call sites found
+[Call Extractor] Done:
+  Total call sites          : 810
+  Return value ignored      : 332
+  Used without null check   : 442
+  User input passthrough    : 132
+[AST Bridge] Step 3 done — 810 call sites
+[Linker] Linking 810 call sites against 533 functions
+[Linker] Done:
+  Total chains   : 78
+  Cross-file     : 56
+  Unresolved     : 627
+  CRITICAL       : 9
+  HIGH           : 40
+  MEDIUM         : 29
+  Vuln types     : {
+  USER_INPUT_TO_EXEC: 9,
+  NULL_DEREFERENCE: 8,
+  USER_INPUT_TO_DB: 31,
+  USER_INPUT_TO_FILESYSTEM: 2,
+  USER_INPUT_TO_FETCH: 3,
+  MISSING_AUTH_ON_ENTRY: 2,
+  GENERAL: 23
+}
+[AST Bridge] Step 4 done — 78 chains, 56 cross-file
+[Chain Detector] Starting — 78 chains to analyze
+[Chain Detector] Formed 48 clusters from 78 chains
+[Chain Detector] Done:
+  Clusters formed   : 48
+  Findings produced : 22
+  Noise filtered    : 26
+  CRITICAL          : 4
+  HIGH              : 18
+  CONFIRMED         : 6
+  Cross-file        : 7
+[AST Bridge] Step 5 done — 22 findings (6 CONFIRMED)
+[AST Bridge] Complete in 2188ms
+[Pipeline] AST done — 22 findings, 78 chains across 38 files in 2188ms      
+[Orchestrator] Coverage gap: 46 files with 0 agent coverage — adding to hacker + guardian
+[Orchestrator] Agent sleuth: 10 files routed (single chunk)
+[Orchestrator] Agent guardian: 55 files → 4 chunks of ≤15
+[Orchestrator] Agent hacker: 54 files → 4 chunks of ≤15
+[Orchestrator] Agent auditor: 0 files routed — skipping
+[Orchestrator] Agent operator: 9 files routed (single chunk)
+[Orchestrator] Agent sentinel: 60 files → 4 chunks of ≤15
+[Agent sleuth] Starting scan of 10 files (model=gemini-3-flash-preview, scanType=web)
+[Agent guardian] Starting scan of 15 files (model=gemini-3-flash-preview, scanType=web)
+ GET /api/scan?scanId=9392c21a-5341-42cf-a98e-ceee1a4aa06f 405 in 24ms (compile: 5ms, proxy.ts: 13ms, render: 6ms)
+[Agent guardian] No JSON found in output
+[Agent guardian] Completed: 0 findings in 24032ms
+[Agent guardian] Starting scan of 15 files (model=gemini-3-flash-preview, scanType=web)
+[Agent sleuth] Completed: 0 findings in 24473ms
+[Agent guardian] Starting scan of 15 files (model=gemini-3-flash-preview, scanType=web)
+[Agent guardian] Could not parse JSON output
+[Agent guardian] Completed: 0 findings in 25680ms
+[Agent guardian] Starting scan of 10 files (model=gemini-3-flash-preview, scanType=web)
+[Agent guardian] No JSON found in output
+[Agent guardian] Completed: 0 findings in 27203ms
+[Agent hacker] Starting scan of 15 files (model=gemini-3-flash-preview, scanType=web)
+[Agent hacker] No JSON found in output
+[Agent hacker] Completed: 0 findings in 23911ms
+[Agent hacker] Starting scan of 15 files (model=gemini-3-flash-preview, scanType=web)
+[Agent guardian] No JSON found in output
+[Agent guardian] Completed: 0 findings in 27494ms
+[Agent hacker] Starting scan of 15 files (model=gemini-3-flash-preview, scanType=web)
+[Agent hacker] No JSON found in output
+[Agent hacker] Completed: 0 findings in 24656ms
+[Agent hacker] Starting scan of 9 files (model=gemini-3-flash-preview, scanType=web)
+[Agent hacker] No JSON found in output
+[Agent hacker] Completed: 0 findings in 26424ms
+[Agent operator] Starting scan of 9 files (model=gemini-3-flash-preview, scanType=web)
+[Agent hacker] No JSON found in output
+[Agent hacker] Completed: 0 findings in 25669ms
+[Agent operator] Could not parse JSON output
+[Agent operator] Completed: 0 findings in 26631ms
+[Aggregator] Cross-validation: 0/0 findings confirmed by 2+ agents
+[Aggregator] Final: 0 verified, 0 rejected (0 auto + 0 LLM), score=100

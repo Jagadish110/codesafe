@@ -312,6 +312,7 @@ export default function SecurityPage() {
         html, body {
           scrollbar-width: none !important;
           -ms-overflow-style: none !important;
+          overflow-x: hidden !important;
         }
         html::-webkit-scrollbar, body::-webkit-scrollbar {
           display: none !important;
@@ -1249,13 +1250,109 @@ export default function SecurityPage() {
             
             .feat-card { min-height: auto !important; padding: 40px 20px 24px !important; }
             
-            .nav { padding: 0 20px !important; }
-            .nav-links { display: none !important; } /* Hide desktop links on mobile for now */
+            .nav { 
+                padding: 0 12px !important; 
+                width: 100% !important; 
+                max-width: 100% !important;
+                top: 0 !important; 
+                border-radius: 0 !important;
+                height: 60px !important;
+                left: 0 !important;
+                right: 0 !important;
+                margin: 0 !important;
+                justify-content: space-between !important;
+                position: fixed !important;
+            }
+            .nav-logo { 
+                font-size: 16px !important; 
+                gap: 6px !important; 
+                flex-shrink: 1 !important; 
+                min-width: 0 !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                white-space: nowrap !important;
+            }
+            .logo-img { width: 20px !important; height: 20px !important; flex-shrink: 0 !important; }
+            .nav-links { display: none !important; }
+            .nav-actions { 
+                gap: 6px !important; 
+                flex-shrink: 0 !important; 
+                display: flex !important;
+                align-items: center !important;
+            }
+            .nav-cta { 
+                padding: 7px 12px !important; 
+                font-size: 11px !important; 
+                white-space: nowrap !important; 
+                border-radius: 50px !important;
+                flex-shrink: 0 !important;
+            }
+            .nav-signup-btn { 
+                padding: 6px 10px !important; 
+                font-size: 10px !important; 
+                white-space: nowrap !important;
+                display: block !important;
+                flex-shrink: 0 !important;
+            }
+            
+            @media (max-width: 360px) {
+                .nav-signup-btn { display: none !important; } /* Hide Sign In on extremely small screens */
+                .nav-logo { font-size: 14px !important; }
+            }
             
             .hero-badge { font-size: 11px !important; padding: 6px 12px !important; }
             .hero-title { font-size: 40px !important; }
             .hero-sub { font-size: 16px !important; }
             
+            /* Input Screen Mobile Fixes */
+            .input-screen-inner {
+                display: flex !important;
+                flex-direction: column !important;
+                padding: 100px 20px 40px 20px !important;
+                gap: 40px !important;
+                align-items: center !important;
+            }
+            .inp-col-left, .inp-col-right {
+                width: 100% !important;
+                max-width: 100% !important;
+                align-items: center !important;
+                text-align: center !important;
+            }
+            .inp-col-right {
+                align-items: center !important;
+            }
+            .inp-title {
+                font-size: 40px !important;
+                margin-bottom: 20px !important;
+                text-align: center !important;
+            }
+            .inp-sub {
+                font-size: 16px !important;
+                margin-bottom: 32px !important;
+                text-align: center !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+            }
+            .inp-biz-row {
+                justify-content: center !important;
+            }
+            
+            /* Scanner Nav Mobile Fixes */
+            .scanner-nav {
+                padding: 12px 16px !important;
+            }
+            .scanner-nav-inner {
+                width: 100% !important;
+            }
+            .nav-back-btn {
+                padding: 8px 14px !important;
+                font-size: 12px !important;
+            }
+            #returnToReportBtn, #scanNewProjectBtn {
+                padding: 8px 12px !important;
+                font-size: 11px !important;
+            }
+
             /* Fix terminal demo scale */
             .terminal-demo { 
                 transform: scale(0.9) !important; 
