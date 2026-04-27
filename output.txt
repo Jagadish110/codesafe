@@ -5,7 +5,7 @@ POST /api/scan 200 in 70s (compile: 3.4s, proxy.ts: 37ms, render: 67s)
   'app/eslint.config.mjs',
   'app/next.config.ts',
   'app/next-env.d.ts',
-  'app/postcss.config.mjs',
+    'app/postcss.config.mjs',
   'app/tsconfig.json'
 ]
 [Graph] Files with imports: 36/60

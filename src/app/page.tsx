@@ -859,28 +859,75 @@ export default function SecurityPage() {
 
         /* Hero Section Enhancements */
         .hero {
-            padding: 120px 40px 80px !important;
-            text-align: center !important;
-            max-width: 1200px !important;
+            padding: 120px 40px 100px !important;
+            max-width: 1400px !important;
             margin: 0 auto !important;
+            overflow: visible !important;
+            position: relative !important;
+        }
+
+        .hero-badge-wrapper {
+            display: flex !important;
+            justify-content: center !important;
+            width: 100% !important;
+            margin-bottom: 40px !important;
+        }
+
+        .hero-container {
+            display: grid !important;
+            grid-template-columns: 1.1fr 0.9fr !important;
+            gap: 80px !important;
+            align-items: center !important;
+            text-align: left !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+
+        .hero-bg-blob {
+            position: absolute !important;
+            top: 10% !important;
+            right: -10% !important;
+            width: 600px !important;
+            height: 600px !important;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, rgba(255, 255, 255, 0) 70%) !important;
+            z-index: 0 !important;
+            pointer-events: none !important;
+        }
+
+        @media (max-width: 1100px) {
+            .hero { padding: 100px 24px 80px !important; }
+            .hero-container {
+                grid-template-columns: 1fr !important;
+                text-align: center !important;
+                gap: 60px !important;
+            }
+            .hero-left {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+            }
+            .hero-sub { margin: 0 auto 48px !important; }
+            .hero-actions { justify-content: center !important; }
         }
 
         .hero-badge {
             display: inline-flex !important;
             align-items: center !important;
-            gap: 8px !important;
-            background: var(--accent-dim) !important;
-            color: var(--accent) !important;
-            padding: 8px 16px !important;
-            border-radius: 20px !important;
-            font-size: 14px !important;
-            font-weight: 500 !important;
-            margin-bottom: 24px !important;
-            border: 1px solid var(--accent-glow) !important;
+            gap: 10px !important;
+            background: rgba(249, 115, 22, 0.08) !important;
+            color: #f97316 !important;
+            padding: 10px 20px !important;
+            border-radius: 99px !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.8px !important;
+            text-transform: uppercase !important;
+            border: 1px solid rgba(249, 115, 22, 0.15) !important;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.05) !important;
         }
 
         .hero h1 {
-            font-size: 82px !important;
+            font-size: clamp(48px, 6vw, 82px) !important;
             font-weight: 800 !important;
             line-height: 0.95 !important;
             margin-bottom: 32px !important;
@@ -899,21 +946,130 @@ export default function SecurityPage() {
         }
 
         .hero-sub {
-            font-size: 18px !important;
+            font-size: 19px !important;
             color: #64748b !important;
             line-height: 1.6 !important;
             margin-bottom: 48px !important;
-            max-width: 600px !important;
-            margin-left: auto !important;
-            margin-right: auto !important;
+            max-width: 540px !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
         }
 
         .hero-actions {
             display: flex !important;
             gap: 16px !important;
-            justify-content: center !important;
+            justify-content: flex-start !important;
             margin-bottom: 60px !important;
         }
+
+        /* Premium Code Mockup */
+        .hero-right {
+            position: relative !important;
+            perspective: 1000px !important;
+        }
+
+        .code-mockup {
+            background: #0d1117 !important;
+            border-radius: 20px !important;
+            border: 1px solid rgba(255,255,255,0.12) !important;
+            box-shadow: 0 40px 100px rgba(15, 23, 42, 0.25) !important;
+            overflow: hidden !important;
+            font-family: 'Space Mono', monospace !important;
+            font-size: 13px !important;
+            transform: rotateY(-5deg) rotateX(2deg) !important;
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
+        }
+
+        .code-mockup:hover {
+            transform: rotateY(0deg) rotateX(0deg) scale(1.02) !important;
+        }
+
+        .mockup-header {
+            background: #161b22 !important;
+            padding: 14px 20px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+        }
+
+        .mockup-dots { display: flex !important; gap: 8px !important; }
+        .mock-dot { width: 10px !important; height: 10px !important; border-radius: 50% !important; }
+        .mock-dot.r { background: #ff5f57 !important; }
+        .mock-dot.y { background: #febc2e !important; }
+        .mock-dot.g { background: #28c840 !important; }
+
+        .mockup-tabs { display: flex !important; gap: 12px !important; margin-left: 20px !important; flex: 1 !important; }
+        .mockup-tab { font-size: 11px !important; color: #7d8590 !important; font-weight: 500 !important; }
+        .mockup-tab.active { color: #e6edf3 !important; position: relative !important; }
+        .mockup-tab.active::after { content: '' !important; position: absolute !important; bottom: -15px !important; left: 0 !important; right: 0 !important; height: 2px !important; background: #f78166 !important; }
+
+        .code-body { padding: 24px !important; color: #e6edf3 !important; }
+        .code-line { display: flex !important; gap: 16px !important; margin-bottom: 4px !important; }
+        .line-num { color: #484f58 !important; text-align: right !important; min-width: 20px !important; user-select: none !important; }
+        
+        .c-keyword { color: #ff7b72 !important; }
+        .c-string { color: #a5d6ff !important; }
+        .c-func { color: #d2a8ff !important; }
+        .c-var { color: #ffa657 !important; }
+        .c-comment { color: #8b949e !important; }
+
+        .risk-alert-float {
+            position: absolute !important;
+            bottom: 40px !important;
+            right: -30px !important;
+            background: #fff !important;
+            border-radius: 20px !important;
+            padding: 16px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 16px !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12) !important;
+            border: 1px solid #fee2e2 !important;
+            animation: alertFloat 4s ease-in-out infinite !important;
+            z-index: 20 !important;
+            width: 280px !important;
+        }
+
+        @keyframes alertFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-10px) scale(1.02); }
+        }
+
+        .risk-alert-icon {
+            width: 48px !important;
+            height: 48px !important;
+            background: #fef2f2 !important;
+            border-radius: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: #ef4444 !important;
+        }
+
+        .risk-alert-content { display: flex !important; flex-direction: column !important; }
+        .risk-alert-title { font-size: 14px !important; font-weight: 800 !important; color: #991b1b !important; margin-bottom: 2px !important; }
+        .risk-alert-sub { font-size: 12px !important; color: #ef4444 !important; font-weight: 600 !important; }
+
+        .live-status {
+            position: absolute !important;
+            top: -12px !important;
+            right: 20px !important;
+            background: #0f172a !important;
+            color: #fff !important;
+            padding: 6px 14px !important;
+            border-radius: 99px !important;
+            font-size: 10px !important;
+            font-weight: 700 !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            letter-spacing: 0.5px !important;
+            z-index: 25 !important;
+        }
+
+        .live-status .dot { width: 6px !important; height: 6px !important; background: #22c55e !important; border-radius: 50% !important; animation: liveBlink 1.5s ease-in-out infinite !important; }
+        @keyframes liveBlink { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } }
 
         .btn-ghost {
             background: #ffffff !important;
@@ -1533,40 +1689,120 @@ export default function SecurityPage() {
 
             {/* HERO */}
             <section className="hero">
-              <div className="hero-badge">
-                <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '12px', height: '12px', marginRight: '6px' }}>
-                  <span style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'currentColor', borderRadius: '50%', animation: 'badgePulse 2s cubic-bezier(0, 0, 0.2, 1) infinite' }}></span>
-                  <span style={{ position: 'relative', display: 'inline-block', width: '6px', height: '6px', backgroundColor: 'currentColor', borderRadius: '50%' }}></span>
-                  <style dangerouslySetInnerHTML={{
-                    __html: `
-                    @keyframes badgePulse {
-                      0% { transform: scale(0.8); opacity: 0.8; }
-                      100% { transform: scale(2.4); opacity: 0; }
-                    }
-                  `}} />
-                </span>
-                Free trial available
+              <div className="hero-bg-blob"></div>
+              <div className="hero-badge-wrapper reveal-on-scroll">
+                <div className="hero-badge">
+                  <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '12px', height: '12px', marginRight: '6px' }}>
+                    <span style={{ position: 'absolute', width: '100%', height: '100%', backgroundColor: 'currentColor', borderRadius: '50%', animation: 'badgePulse 2s cubic-bezier(0, 0, 0.2, 1) infinite' }}></span>
+                    <span style={{ position: 'relative', display: 'inline-block', width: '6px', height: '6px', backgroundColor: 'currentColor', borderRadius: '50%' }}></span>
+                  </span>
+                  Free trial available
+                </div>
               </div>
-              <h1>
-                <span className="serif">Secure Your</span>
-                <span className="gradient-text">AI-Generated</span>{' '}
-                <span className="keyword-underline-wrapper">
-                  <span className="gradient-text-code">Code</span>
-                </span>
-              </h1>
-              <p className="hero-sub reveal-on-scroll">Professional security scanning for modern development teams. Get comprehensive vulnerability reports with actionable fixes in under 30 seconds.</p>
-              <div className="hero-actions reveal-on-scroll" style={{ transitionDelay: '0.1s' }}>
-                <button className="btn-primary" onClick={() => (window as any).handleStartScan?.()}>
-                  Start Your Trial
-                </button>
-                <button className="btn-ghost"
-                  onClick={() => document.getElementById('how')?.scrollIntoView({ behavior: 'smooth' })}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color: '#64748b' }}>
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
-                    <path d="M10 8L16 12L10 16V8Z" fill="currentColor" />
-                  </svg>
-                  How it works
-                </button>
+              <div className="hero-container">
+                <div className="hero-left">
+                  <h1 className="reveal-on-scroll">
+                    <span className="serif">Secure Your</span>
+                    <span className="gradient-text">AI-Generated</span>{' '}
+                    <span className="keyword-underline-wrapper">
+                      <span className="gradient-text-code">Code</span>
+                    </span>
+                  </h1>
+                  <p className="hero-sub reveal-on-scroll">Professional security scanning for modern development teams. Get comprehensive vulnerability reports with actionable fixes in under 30 seconds.</p>
+                  <div className="hero-actions reveal-on-scroll" style={{ transitionDelay: '0.1s' }}>
+                    <button className="btn-primary" onClick={() => (window as any).handleStartScan?.()}>
+                      Start Your Trial
+                    </button>
+                    <button className="btn-ghost"
+                      onClick={() => document.getElementById('how')?.scrollIntoView({ behavior: 'smooth' })}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ color: '#64748b' }}>
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+                        <path d="M10 8L16 12L10 16V8Z" fill="currentColor" />
+                      </svg>
+                      How it works
+                    </button>
+                  </div>
+                </div>
+
+                <div className="hero-right reveal-on-scroll" style={{ transitionDelay: '0.2s' }}>
+                  <div className="live-status">
+                    <div className="dot"></div>
+                    REAL-TIME SECURITY PULSE
+                  </div>
+
+                  <div className="code-mockup">
+                    <div className="mockup-header">
+                      <div className="mockup-dots">
+                        <div className="mock-dot r"></div>
+                        <div className="mock-dot y"></div>
+                        <div className="mock-dot g"></div>
+                      </div>
+                      <div className="mockup-tabs">
+                        <div className="mockup-tab active">app.js</div>
+                        <div className="mockup-tab">config.py</div>
+                        <div className="mockup-tab">auth.ts</div>
+                      </div>
+                    </div>
+                    <div className="code-body">
+                      <div className="code-line">
+                        <span className="line-num">1</span>
+                      </div>
+                      <div className="code-line">
+                        <span className="line-num">2</span>
+                        <span><span className="c-keyword">const</span> apiKey =</span>
+                      </div>
+                      <div className="code-line">
+                        <span className="line-num">3</span>
+                        <span>  <span className="c-string">&quot;sk_live_51H8...&quot;</span></span>
+                      </div>
+                      <div className="code-line">
+                        <span className="line-num">4</span>
+                      </div>
+                      <div className="code-line">
+                        <span className="line-num">5</span>
+                        <span>app.<span className="c-func">post</span>(<span className="c-string">&apos;/login&apos;</span>, (req, res) =&gt; &#123;</span>
+                      </div>
+                      <div className="code-line">
+                        <span className="line-num">6</span>
+                        <span>  <span className="c-keyword">if</span> (req.user) &#123;</span>
+                      </div>
+                      <div className="code-line">
+                        <span className="line-num">7</span>
+                        <span>    res.<span className="c-func">redirect</span>(<span className="c-string">&apos;/dashboard&apos;</span>);</span>
+                      </div>
+                      <div className="code-line">
+                        <span className="line-num">8</span>
+                        <span>  &#125; <span className="c-keyword">else</span> &#123;</span>
+                      </div>
+                      <div className="code-line">
+                        <span className="line-num">9</span>
+                        <span>    res.<span className="c-func">send</span>(<span className="c-string">&apos;Welcome&apos;</span>);</span>
+                      </div>
+                      <div className="code-line">
+                        <span className="line-num">10</span>
+                        <span>  &#125;</span>
+                      </div>
+                      <div className="code-line">
+                        <span className="line-num">11</span>
+                        <span>&#125;);</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="risk-alert-float">
+                    <div className="risk-alert-icon">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                      </svg>
+                    </div>
+                    <div className="risk-alert-content">
+                      <div className="risk-alert-title">RISK DETECTED</div>
+                      <div className="risk-alert-sub">Critical issues found</div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="built-for reveal-on-scroll" style={{ transitionDelay: '0.2s' }}>
                 <span className="built-for-label">TRUSTED BY TEAMS USING</span>
@@ -2097,8 +2333,8 @@ export default function SecurityPage() {
                   </div>
                   <div className="step-card reveal-on-scroll" style={{ transitionDelay: '0.1s' }}>
                     <div className="step-num">2</div>
-                    <div className="step-title">AI-Powered Analysis</div>
-                    <div className="step-text">AI analyzes your code like a senior security engineer, tracing data flows, identifying logic flaws, and detecting exposed secrets with contextual understanding.</div>
+                    <div className="step-title">Specialist Security Scan</div>
+                    <div className="step-text">Our engine performs a deep, multi-layered audit of your entire codebase, tracing data flows and identifying complex logic flaws with professional-grade precision.</div>
                   </div>
                   <div className="step-card reveal-on-scroll" style={{ transitionDelay: '0.2s' }}>
                     <div className="step-num">3</div>

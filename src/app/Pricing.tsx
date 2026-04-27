@@ -6,7 +6,7 @@ export const TOTAL_CHECKS = 90;
 export const PRICING_DATA = [
   {
     tier: "Starter",
-    price: "$7",
+    price: "$3",
     period: "Per Scan",
     subPeriod: "",
     desc: "Catch the biggest launch-blockers before going live.",
@@ -23,7 +23,7 @@ export const PRICING_DATA = [
   },
   {
     tier: "Pro",
-    price: "$15",
+    price: "$10",
     period: "",
     subPeriod: "",
     desc: "Full AI-era coverage for founders actively building.",
@@ -41,7 +41,7 @@ export const PRICING_DATA = [
   },
   {
     tier: "Plus",
-    price: "$39",
+    price: "$27",
     period: "",
     subPeriod: "",
     desc: "Every check including advanced infra & AI-era attacks.",
